@@ -4,3 +4,5 @@ This repository is to bridge the gap of the SVN repository; continue to use the 
 
 This readme will eventually contain information for setting up the environments for hosting (localhost or server) the application. 
 Stay tuned!
+
+Testing commiting remotely
