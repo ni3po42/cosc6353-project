@@ -1,0 +1,29 @@
+{
+  "name": "cosc6353-project",
+  "version": "1.0.0",
+  "description": "Project for Summer Software design course",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp run_tests",
+    "start": "./run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ni3po42/cosc6353-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ni3po42/cosc6353-project/issues"
+  },
+  "homepage": "https://github.com/ni3po42/cosc6353-project#readme",
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "gulp-install": "^1.1.0",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.1"
+  }
+}

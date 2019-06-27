@@ -1,0 +1,1 @@
+npx babel --watch src/WebApp/react --out-dir src/WebApp/public/javascripts --presets react-app/prod 

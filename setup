@@ -1,0 +1,22 @@
+npm init
+npm install babel-cli@6 babel-preset-react-app@3
+
+npm install -g npx
+
+sudo chmod startup +x
+sudo chmod setup +x
+sudo chmod run +x
+sudo chmod test +x
+
+npm install plugin-error
+
+npm install -g jasmine
+npm install jasmine-core
+
+jasmine init
+
+npm install --global gulp-cli
+npm install gulp
+npm install gulp-jasmine-browser
+
+npm install phantomjs-prebuilt

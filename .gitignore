@@ -1,0 +1,4 @@
+#do not track downloaded packages!
+/node_modules/*
+#do not track compiled javascript
+/src/WebApp/public/javascripts/*
