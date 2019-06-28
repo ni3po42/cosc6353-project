@@ -1,0 +1,11 @@
+{
+    "all": true,
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "tests/**/*.js",
+      "src/WebApp/public/**/*.js",
+      "src/WebApp/react/**/*.js"
+    ]
+}

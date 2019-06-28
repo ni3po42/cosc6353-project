@@ -1,0 +1,10 @@
+{
+    "all": true,
+    "include": [
+      "src/public/javascripts/**/*.js"
+    ],
+    "exclude": [
+    "src/public/javascripts/thirdparty/**/*.js",
+      "tests/**/*.js"
+    ]
+}
