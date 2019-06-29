@@ -1,1 +1,1 @@
-node ./WebApp/bin/www
+node ./src/WebApp/bin/www

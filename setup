@@ -1,5 +1,10 @@
 npm init
+
+%old
 npm install babel-cli@6 babel-preset-react-app@3
+
+%new
+npm i @babel/core babel-loader @babel/preset-env @babel/preset-react --save-dev
 
 npm install -g npx
 
@@ -26,3 +31,7 @@ npm install phantomjs-prebuilt
 
 npm install core-js
 npm i nyc --save-dev
+npm install webpack --save-dev
+npm install webpack-cli --save-dev
+
+npm i react react-dom

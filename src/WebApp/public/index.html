@@ -5,26 +5,7 @@
     </head>
     <body>
     
-    <div id="content"></div>
-    
-    <!-- Load React. -->
-    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
-    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-    
-    <!--<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>-->
-    <!--<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>-->
-    
-    <script src="/javascripts/test.js"></script>
-    
-    <script>
-        (function(){
-            /*global ReactDOM*/
-            /*global e*/
-            /*global TestComponent*/
-            const domContainer = document.querySelector('#content');
-            ReactDOM.render(React.createElement(TestComponent), domContainer);
-        })()
-    </script>
+    <div id="app"></div>
+    <script src="/javascripts/bundle.js"></script>
     </body>
 </html>

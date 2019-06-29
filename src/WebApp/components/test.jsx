@@ -1,4 +1,4 @@
-//import React from 'react'
+import React from 'react'
 
 class TestComponent extends React.Component {
   constructor(props) {
@@ -14,4 +14,4 @@ class TestComponent extends React.Component {
   }
 }
 
-//export default TestComponent;
+export default TestComponent
