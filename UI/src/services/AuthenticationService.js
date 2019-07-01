@@ -1,16 +1,12 @@
-import { Injections } from '../components/IoC.js';
+import Logger from './Logger.js';
+import axios from 'axios';
 
 class AuthenticationService
 {
-    constructor(logger){
-        this.logger = logger;
-    }
     
     authenticate(){
-        this.logger('hello world');
+        Logger('hello world');
     }
 }
-
-AuthenticationService[Injections] = ['logger'];
 
 export default AuthenticationService;

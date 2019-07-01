@@ -1,13 +1,10 @@
 import React from 'react';
-//import logo from '../media/logo.svg';
 import '../css/App.css';
-import container from './container.js';
 
 import Login from './Login.js';
 
 //https://reacttraining.com/react-router/web/guides/quick-start
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-
 
 function App() {
   return (
@@ -22,7 +19,7 @@ function App() {
             </ul>
           </nav>
     
-          <Route path="/Login" exact render={()=> container.inject(Login) } />
+          <Route path="/Login" exact component={Login} />
       
       </div>
       </Router>
