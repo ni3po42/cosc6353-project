@@ -1,28 +1,31 @@
 import React from 'react';
-import logo from '../media/logo.svg';
+//import logo from '../media/logo.svg';
 import '../css/App.css';
+import container from './container.js';
 
-import TestComponent from './test.jsx'
+import Login from './Login.js';
+
+//https://reacttraining.com/react-router/web/guides/quick-start
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <TestComponent />
-      </header>
-    </div>
+      <Router>
+      <div className="App">
+      
+          <nav>
+            <ul>
+              <li>
+                <Link to="/Login">Login</Link>
+              </li>
+            </ul>
+          </nav>
+    
+          <Route path="/Login" exact render={()=> container.inject(Login) } />
+      
+      </div>
+      </Router>
   );
 }
 
