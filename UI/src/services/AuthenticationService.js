@@ -6,6 +6,7 @@ class AuthenticationService
     
     authenticate(){
         Logger('hello world');
+        return Promise.resolve({});
     }
 }
 

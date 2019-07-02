@@ -64,7 +64,8 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "build-prod": "node scripts/build.js \"production\"",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js --coverage --watch",
+    "testone": "node scripts/test.js --coverage"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -87,9 +88,11 @@
       "!src/**/*.d.ts"
     ],
     "setupFiles": [
-      "react-app-polyfill/jsdom"
+      "react-app-polyfill/jsdom",
+      "./src/setupTests.js"
     ],
     "setupFilesAfterEnv": [],
+    "snapshotSerializers": ["enzyme-to-json/serializer"],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
       "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
@@ -132,5 +135,10 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "enzyme-to-json": "^3.3.5"
   }
 }
