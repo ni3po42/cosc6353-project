@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Login from '../components/Login';
+import { LogIn } from '../components/LogIn.js';
 import AuthenticationService from '../services/AuthenticationService.js';
 import { mount } from 'enzyme';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
 const mockAuthenticate = jest.fn();
 jest.mock('../services/AuthenticationService.js', () => {
@@ -19,6 +21,10 @@ const createSpyObj = (baseName, methodNames) => {
     }, {});
 };
 
+const createLoginComp = (props) => {
+    const component = mount(<Router><LogIn {...props} /></Router>);
+    return component.find(LogIn);
+}
 
 describe("Login Component tests", ()=>{
 
@@ -31,25 +37,24 @@ describe("Login Component tests", ()=>{
 
     it('renders without crashing', () => {
       const div = document.createElement('div');
-      ReactDOM.render(<Login />, div);
+      ReactDOM.render(<Router><LogIn /></Router>, div);
       ReactDOM.unmountComponentAtNode(div);
     });
     
     it('calls authentication service on submit', async ()=>{
         //arrange
-        const component = mount(<Login />);
-        const instance = component.instance();
         
         let history = createSpyObj('history', ['push']);
         
-        component.setProps({ history});
+        const component = createLoginComp({ history});
+        const instance = component.instance();
         
         const asyncMock = mockAuthenticate.mockResolvedValue({});
         
         jest.spyOn(instance, 'goHome');
         jest.spyOn(instance, 'loginDenied');
         
-        component.setState({ username: "user@mail.org", password : "password" });
+        component.setState({ email: "user@mail.org", password : "password" });
         
         //act
         component
@@ -58,7 +63,7 @@ describe("Login Component tests", ()=>{
         
         //assert
         await asyncMock();
-        expect(mockAuthenticate).toHaveBeenCalled();
+        expect(mockAuthenticate).toHaveBeenCalledWith("user@mail.org", "password");
         expect(instance.goHome).toHaveBeenCalled();
         expect(history.push).toHaveBeenCalledWith('/');
         expect(instance.loginDenied).not.toHaveBeenCalled();
@@ -67,19 +72,16 @@ describe("Login Component tests", ()=>{
     it('can deny login', async ()=>{
         
         //arrange
-        const component = mount(<Login />);
-        const instance = component.instance();
-        
         let history = createSpyObj('history', ['push']);
-        
-        component.setProps({ history});
+        const component = createLoginComp({ history });
+        const instance = component.instance();
         
         const asyncMock = mockAuthenticate.mockRejectedValue({ error : "error message"});
         
         jest.spyOn(instance, 'goHome');
         jest.spyOn(instance, 'loginDenied');
 
-        component.setState({ username: "user@mail.org", password : "nope" });
+        component.setState({ email: "user@mail.org", password : "nope" });
         
         //act
         component
@@ -94,7 +96,7 @@ describe("Login Component tests", ()=>{
         catch (e)
         {        }
         
-        expect(mockAuthenticate).toHaveBeenCalled();
+        expect(mockAuthenticate).toHaveBeenCalledWith("user@mail.org", "nope");
         expect(instance.goHome).not.toHaveBeenCalled();
         expect(history.push).not.toHaveBeenCalledWith('/');
         expect(instance.loginDenied).toHaveBeenCalledWith("error message");

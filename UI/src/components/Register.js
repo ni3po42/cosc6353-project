@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import "../App.css";
+import { Link } from 'react-router-dom';
+
+import "../css/App.css";
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -173,10 +175,8 @@ const formValid = ({ formErrors, ...rest }) => {
                   </div>
                   <div className="createAccount">
                     <button type="submit">Create Account</button>
-                    <a href="http://localhost:3000/LogIn" class="btn btn-link" role="button">Already Have An Account?</a>
+                    <Link to="/LogIn" className="btn btn-link">Already Have An Account?</Link>
                  
-      
-      
                   </div>
                 </form>
               </div>

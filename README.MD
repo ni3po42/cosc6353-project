@@ -27,7 +27,7 @@ will delete it.
 
 routes - this will save future REST api routes
 
-### `TESTING`
+TESTING
 Any code added MUST have unit tests will near 100% code coverage. For the UI
 project, run 'npm run test' to run suite. The script will be updated to include 
 coverage soon.
