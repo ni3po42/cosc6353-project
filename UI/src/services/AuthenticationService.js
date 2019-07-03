@@ -53,8 +53,25 @@ class AuthenticationService
 {
     
     authenticate(email, password){
-        Logger('hello world');
+        
+        //temp
+        localStorage.setItem("accountId", email);
+        
         return Promise.resolve({});
+    }
+    
+    // getCookieValue(a) {
+    //     let b = document.cookie.match('(^|[^;]+)\\s*' + a + '\\s*=\\s*([^;]+)');
+    //     return b ? b.pop() : '';
+    // }
+    
+    isAuthenticated(){
+        //temp
+        return !!localStorage.getItem("accountId");
+    }
+    
+    logOff(){
+        localStorage.removeItem("accountId");
     }
 }
 

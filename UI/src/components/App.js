@@ -3,21 +3,24 @@ import "../css/App.css";
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
+import {Container} from 'react-bootstrap';
+
 import { Home } from './Home';
 import { Register } from './Register';
-import { LogIn } from './LogIn.js';
+import { LogIn } from './LogIn';
 import { Profile } from './Profile';
 import { NoMatch } from './NoMatch';
-import { Layout } from './Layout';
 import { NavigationBar} from './NavigationBar';
 import { Jumbotron } from './Jumbotron';
-
+import { QuoteTable } from './QuoteHistory';
+import { ProtectedRoute } from './ProtectedRoute';
+import { LogOff } from './LogOff';
 
 class App extends Component {
 
   render() {
     return(
-    <React.Fragment>
+    <Container>
       <Router>
         <NavigationBar/>
         <Jumbotron/>
@@ -25,11 +28,13 @@ class App extends Component {
           <Route exact path= "/"component={Home}/>
           <Route path= "/Register"component={Register}/>
           <Route path= "/LogIn" component={LogIn}/>
-          <Route path= "/Profile" component={Profile}/>
+          <ProtectedRoute redirectTo="/LogIn" path= "/Profile" component={Profile}/>
+          <ProtectedRoute redirectTo="/LogIn" path= "/QuoteHistory" component={QuoteTable}/>
+          <ProtectedRoute redirectTo="/LogIn" path= "/LogOff" component={LogOff}/>
           <Route component={NoMatch}/>
         </Switch>
       </Router>
-    </React.Fragment>
+    </Container>
     );
   }
 }
