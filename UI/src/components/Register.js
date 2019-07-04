@@ -1,107 +1,56 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
-
 import "../css/App.css";
 
-const emailRegex = RegExp(
-    /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-  );
 
-
-const formValid = ({ formErrors, ...rest }) => {
-    let valid = true;
-  
-    Object.values(formErrors).forEach(val => {
-      val.length > 0  && (valid = false);
-    });
-  
-    Object.values(rest).forEach(val=> {
-      val === null && (valid = false);
-    });
-  
-    return valid;
-  };
-
-
-
-
-
+import { ValidateAll } from "common/validations/core";
+import { Validations } from "common/validations/register";
 
  export class Register extends Component {
         constructor(props) {
           super(props);
+          
+          const fields = {
+            email : "",
+            password: "",
+            passwordConfirm : ""
+          };
+          
           this.state = {
-            firstName: null,
-            lastName: null,
-            email: null,
-            password: null,
+            ...fields,
             formErrors: {
-              firstName: "",
-              lastName: "",
-              email: "",
-              password: ""
+              ...fields
             }
           };
       
         }
       
-        handleSubmit = e => {
-          e.preventDefault();
+    handleSubmit = e => {
+        e.preventDefault();
+        var errorMessages = ValidateAll(this.state, Validations);
+        if (errorMessages) {
+            this.setState({formErrors : errorMessages});
+            console.error("FORM INVALID.E");
+            
+        } else {
+            console.log("FORM VALID.")
+        }
+    };
       
-          if (formValid(this.state)) {
-            console.log(`
-              --SUBMITIING--
-              First Name: ${this.state.firstName}
-              Last Name: ${this.state.lastName}
-              Email: ${this.state.email}
-              Password: ${this.state.password}
-            `);
-          } else {
-            console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
-          }
-        };
-      
-        handleChange = e => {
-          e.preventDefault();
-          const { name, value } = e.target;
-          let formErrors = this.state.formErrors;
-      
-      
-          switch (name) {
-            case 'firstName':
-              formErrors.firstName =
-                value.length < 3
-                  ? ' minimum 3 characters required'
-                  : "";
-      
-              break;
-            case 'lastName':
-              formErrors.lastName =
-                value.length < 3
-                  ? ' minimum 3 characters required'
-                  : "";
-      
-              break;
-            case 'email':
-              formErrors.email =
-                emailRegex.test(value)
-                  ? ""
-                  : "invalid email address";
-              break;
-      
-            case 'password':
-              formErrors.password =
-                value.length < 6
-                  ? "minimum 6 characters required"
-                  : "";
-      
-              break;
-            default:
-              break;
-          }
-          this.setState({ formErrors, [name]: value }, () => console.log(this.state));
-      
-        };
+    handleChange = e => {
+        e.preventDefault();
+        const { name, value } = e.target;
+        let formErrors = this.state.formErrors;
+        const message = Validations[name](value, this.state);
+        
+        if (message){
+            formErrors[name] = message;
+        }else{
+            delete formErrors[name];
+        }
+        
+        this.setState({ formErrors, [name]: value });
+    };
       
       
         render() {
@@ -112,68 +61,57 @@ const formValid = ({ formErrors, ...rest }) => {
               <div className="form-wrapper">
                 <h1>Create Account</h1>
                 <form onSubmit={this.handleSubmit} noValidate>
-                  <div className="firstName">
-                    <label htmlFor="firstName">First Name</label>
-                    <input
-                      className={formErrors.firstName.length > 0 ? "error" : null }
-                      placeholder="First Name"
-                      type="text"
-                      name="firstName"
-                      noValidate
-                      onChange={this.handleChange} />
-      
-                    {formErrors.firstName.length > 0 && (
-                      <span className="errorMessage">{formErrors.firstName}</span>
-                    )}
-      
-                  </div>
-                  <div className="lastName">
-                    <label htmlFor="lastName">Last Name</label>
-                    <input
-                      className={formErrors.lastName.length > 0 ? "error" : null }
-                      placeholder="Last Name"
-                      type="text"
-                      name="lastName"
-                      noValidate
-                      onChange={this.handleChange} />
-      
-                    {formErrors.lastName.length > 0 && (
-                      <span className="errorMessage">{formErrors.lastName}</span>
-                    )}
-      
-                  </div>
-                  <div className="email">
+                 
+                  <div>
                     <label htmlFor="email">Email</label>
                     <input
-                      className={formErrors.email.length > 0 ? "error" : null }
+                      className={formErrors.email ? "error" : null }
                       placeholder="Email"
                       type="email"
                       name="email"
                       noValidate
                       onChange={this.handleChange} />
       
-                    {formErrors.email.length > 0 && (
+                    {formErrors.email && (
                       <span className="errorMessage">{formErrors.email}</span>
                     )}
       
                   </div>
-                  <div className="password">
+                  <div>
                     <label htmlFor="password">Password</label>
                     <input
-                      className={formErrors.password.length > 0 ? "error" : null }
+                      className={formErrors.password ? "error" : null }
                       placeholder="Password"
                       type="password"
                       name="password"
                       noValidate
                       onChange={this.handleChange} />
       
-                      {formErrors.password.length > 0 && (
+                      {formErrors.password && (
                         <span className="errorMessage">{formErrors.password}</span>
                       )}
       
                     
                   </div>
-                  <div className="createAccount">
+                  
+                  <div>
+                    <label htmlFor="password">Confirm Password</label>
+                    <input
+                      className={formErrors.passwordConfirm ? "error" : null }
+                      placeholder="Confirm Password"
+                      type="password"
+                      name="passwordConfirm"
+                      noValidate
+                      onChange={this.handleChange} />
+      
+                      {formErrors.passwordConfirm && (
+                        <span className="errorMessage">{formErrors.passwordConfirm}</span>
+                      )}
+      
+                    
+                  </div>
+                  
+                  <div>
                     <button type="submit">Create Account</button>
                     <Link to="/LogIn" className="btn btn-link">Already Have An Account?</Link>
                  

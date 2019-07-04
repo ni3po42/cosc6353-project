@@ -1,0 +1,10 @@
+{
+  "name": "common",
+  "version": "1.0.2",
+  "description": "This folder only contains javascript script (ES5 + CommonJS) style scripts that can be shared between ReactJs and NodeJs For instance: object model definitions, field validations",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

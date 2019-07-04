@@ -21,7 +21,7 @@ class LogIn extends React.Component {
     handleSubmit = async (event) => {
         await Authenticate(this.state.email, this.state.password)
             .then(()=> this.goHome())
-            .catch((e)=>this.loginDenied(e.error));
+            .catch((e)=>this.loginDenied(e));
     }
 
     goHome = () =>{
@@ -34,6 +34,7 @@ class LogIn extends React.Component {
 
     render(){
         const { errorMessage } = this.state;
+        
         return (
             <div className="Wrapper">
                 <div className="form-wrapper">
@@ -59,12 +60,13 @@ class LogIn extends React.Component {
                                 value={this.state.password} 
                                 onChange={this.handleInputChange} />
                         </div>
+                        {errorMessage && (
+                                <div className="errorMessage">{errorMessage}</div>
+                            )}
                         <div className="Sign In">
                             <button type="submit" onClick={this.handleSubmit}>Sign In</button>
 
-                            {errorMessage && (
-                                <span className="errorMessage">{errorMessage}</span>
-                            )}
+                            
                             
                             <Link to="/Register" className="btn btn-link">Don't have an Account?</Link>
                         </div>

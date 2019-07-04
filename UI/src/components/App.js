@@ -13,6 +13,7 @@ import { NoMatch } from './NoMatch';
 import { NavigationBar} from './NavigationBar';
 import { Jumbotron } from './Jumbotron';
 import { QuoteTable } from './QuoteHistory';
+import { NewQuote } from './NewQuote';
 import { ProtectedRoute } from './ProtectedRoute';
 import { LogOff } from './LogOff';
 
@@ -29,6 +30,7 @@ class App extends Component {
           <Route path= "/Register"component={Register}/>
           <Route path= "/LogIn" component={LogIn}/>
           <ProtectedRoute redirectTo="/LogIn" path= "/Profile" component={Profile}/>
+          <ProtectedRoute redirectTo="/LogIn" path= "/NewQuote" component={NewQuote}/>
           <ProtectedRoute redirectTo="/LogIn" path= "/QuoteHistory" component={QuoteTable}/>
           <ProtectedRoute redirectTo="/LogIn" path= "/LogOff" component={LogOff}/>
           <Route component={NoMatch}/>

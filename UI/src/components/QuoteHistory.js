@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import { Pagination } from 'react-bootstrap'
 
+import { GetQuotes } from "../services/QuoteService";
+import { GetAccount } from '../services/AuthenticationService';
+import { GetProfile} from "../services/ProfileService";
+
 class QuoteTable extends React.Component
 {
     static Headers = [
-        {field:"key", display:"Quote Id"}, 
+        {field:"id", display:"Quote Id"}, 
         {field:"gallonsRequested", display:"Gallons Requested"}, 
         {field:"deliveryAddress", display:"Delivery Address"},
         {field:"deliveryDate", display:"Delivery Date"},
@@ -15,58 +19,58 @@ class QuoteTable extends React.Component
     constructor(props){
         super(props);
         
-        let start = 0;
-        let newPageData = [];
-        for(let i = 1; i<=5;i++){
-            newPageData.push({
-                "key": start + i,
-                "gallonsRequested": start+i, 
-                "deliveryAddress": i*i + " street", 
-                "deliveryDate": new Date().toDateString(),
-                "suggestedPrice": 0.0,
-                "totalAmount": 0.0
-            });
-        }
-        
         this.state = {
-            page : newPageData,
+            page : [],
             pageSize :  5,
-            pageCount : 10,
-            currentPage : 1
+            pageCount : 0,
+            currentPage : 0
         };
     }
     
     componentDidMount() {
-        
+        GetAccount()
+            .then(account => GetProfile(account.id))
+            .then(profile => {
+                
+                return GetQuotes(profile.accountId)
+                    .then(quotes=> {
+                        var pageData = quotes.map(quote=> ({
+                            ...quote,
+                            deliveryAddress : [profile.address1, profile.address2, profile.city + " ," + profile.state + " " + profile.zip]
+                        }));
+                        this.setState({page : pageData});
+                    });
+            })
+            .catch(e => console.log(e) );
     }
 
     handleClick = (delta, gotoPage) => {
-        let newPage = gotoPage || this.state.currentPage + delta;
+        // let newPage = gotoPage || this.state.currentPage + delta;
         
-        if (newPage > this.state.pageCount || newPage < 1){
-            return;
-        }
+        // if (newPage > this.state.pageCount || newPage < 1){
+        //     return;
+        // }
         
         
         
-        let start = this.state.pageSize * (newPage-1);
+        // let start = this.state.pageSize * (newPage-1);
         
-        let newPageData = [];
-        for(let i = 1; i<=this.state.pageSize;i++){
-            newPageData.push({
-                "key": start + i,
-                "gallonsRequested": start+i, 
-                "deliveryAddress": i*i + " street", 
-                "deliveryDate": new Date().toDateString(),
-                "suggestedPrice": 0.0,
-                "totalAmount": 0.0
-            });
-        }
+        // let newPageData = [];
+        // for(let i = 1; i<=this.state.pageSize;i++){
+        //     newPageData.push({
+        //         "key": start + i,
+        //         "gallonsRequested": start+i, 
+        //         "deliveryAddress": i*i + " street", 
+        //         "deliveryDate": new Date().toDateString(),
+        //         "suggestedPrice": 0.0,
+        //         "totalAmount": 0.0
+        //     });
+        // }
         
-        this.setState({
-            page : newPageData,
-            currentPage : newPage
-        })
+        // this.setState({
+        //     page : newPageData,
+        //     currentPage : newPage
+        // })
     }
     
     render(){
@@ -84,7 +88,9 @@ class QuoteTable extends React.Component
                     <tbody>
                         {this.state.page.map(quote=> (
                             <tr key={quote.key}>
-                                {QuoteTable.Headers.map(h=> (<td key={h.field}>{quote[h.field]}</td>))}
+                                {QuoteTable.Headers.map(h=> (<td key={h.field}>{
+                                Array.isArray(quote[h.field]) ? quote[h.field].map((v)=> <div>{v}</div> ) : quote[h.field]
+                                }</td>))}
                             </tr>
                         ))}
                     </tbody>

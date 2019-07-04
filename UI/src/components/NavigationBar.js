@@ -43,6 +43,7 @@ export class NavigationBar extends React.Component {
                     {this.state.authenticated && (
                     <React.Fragment>
                         <Nav.Item><WithRouter to="/Profile"><Nav.Link>Profile</Nav.Link></WithRouter></Nav.Item>
+                        <Nav.Item><WithRouter to="/NewQuote"><Nav.Link>Get Quote</Nav.Link></WithRouter></Nav.Item>
                         <Nav.Item><WithRouter to="/QuoteHistory"><Nav.Link>QuoteHistory</Nav.Link></WithRouter></Nav.Item>
                         <Nav.Item><WithRouter to="/LogOff"><Nav.Link>Log Off</Nav.Link></WithRouter></Nav.Item>
                     </React.Fragment>

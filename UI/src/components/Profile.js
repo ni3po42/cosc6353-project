@@ -1,73 +1,60 @@
 import React, { Component } from "react";
 
-const emailRegex = RegExp(
-    /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-);
+import { ValidateAll } from "common/validations/core";
+import {States, Validations } from "common/validations/profile"
 
-
-const formValid = ({ formErrors, ...rest }) => {
-    let valid = true;
-
-    Object.values(formErrors).forEach(val => {
-        val.length > 0 && (valid = false);
-    });
-
-    Object.values(rest).forEach(val => {
-        val === null && (valid = false);
-    });
-
-    return valid;
-};
-
-
-
+import {GetProfile, UpdateProfile} from "../services/ProfileService";
+import { GetAccount } from '../services/AuthenticationService.js';
 
 export class Profile extends Component {
     
-    static states = [ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY' ];
-    
     constructor(props) {
         super(props);
-        this.state = {
-            firstName: null,
-            lastName: null,
-            email: null,
-            address1: null,
-            address2: null,
-            city: null,
-            state: null,
-            zip: null,
-            formErrors: {
-                firstName: "",
-                lastName: "",
-                email: "",
-                address1: "",
-                address2: "",
-                city: "",
-                state: "",
-                zip: ""
-            }
+        
+        const fields = {
+            fullName: "",
+            address1: "",
+            address2: "",
+            city: "",
+            state: "",
+            zip: ""
         };
-
+        
+        this.state = {
+            id : "",
+            ...fields,
+            formErrors: {
+                ...fields
+            },
+            profileDirty : false,
+            updated : false,
+            updateError : ""
+        };
     }
 
-    handleSubmit = e => {
+    componentDidMount() {
+        GetAccount()
+            .then(account=> GetProfile(account.id))
+            .then(profile => {
+                const { accountId, ...data } = profile;
+                this.setState({...data});
+            });
+    }
+    
+    handleSubmit = (e) => {
         e.preventDefault();
-
-        if (formValid(this.state)) {
-            console.log(`
-                  --SUBMITIING--
-                  First Name: ${this.state.firstName}
-                  Last Name: ${this.state.lastName}
-                  Email: ${this.state.email}
-                  Address1: ${this.state.adress1},
-                  Address2: ${this.state.adress2}
-                  City: ${this.state.city}
-                  State: ${this.state.state}
-                  Zip: ${this.state.zip}
-                `);
+        
+        var errorMessages = ValidateAll(this.state, Validations);
+        if (errorMessages) {
+            this.setState({formErrors : errorMessages});
         } else {
-            console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
+            
+            GetAccount()
+                .then(account => UpdateProfile(account.id, this.state))
+                .then(()=> {
+                    this.setState({profileDirty : false, updated : true});
+                })
+                .catch(e => this.setState({updateError : e}));
         }
     };
 
@@ -75,71 +62,15 @@ export class Profile extends Component {
         e.preventDefault();
         const { name, value } = e.target;
         let formErrors = this.state.formErrors;
-
-
-        switch (name) {
-            case 'firstName':
-                formErrors.firstName =
-                    value.length < 3
-                        ? ' minimum 3 characters required'
-                        : "";
-
-                break;
-            case 'lastName':
-                formErrors.lastName =
-                    value.length < 3
-                        ? ' minimum 3 characters required'
-                        : "";
-
-                break;
-            case 'email':
-                formErrors.email =
-                    emailRegex.test(value)
-                        ? ""
-                        : "invalid email address";
-                break;
-
-            case 'address1':
-                formErrors.address1 =
-                    value.length < 3
-                        ? "minimum 3 characters required"
-                        : "";
-
-                break;
-                
-            case 'address2':
-                formErrors.address2 =
-                    value.length < 3
-                        ? "minimum 3 characters required"
-                        : "";
-
-                break;
-            case 'city':
-                formErrors.city =
-                    value.length < 3
-                        ? "minimum 3 characters required"
-                        : "";
-
-                break;
-            case 'state':
-                formErrors.state =
-                    value.length < 2
-                        ? "minimum 2 characters required"
-                        : "";
-
-                break;
-            case 'zip':
-                formErrors.zip =
-                    value.length < 5
-                        ? "minimum 5 characters required"
-                        : "";
-
-                break;
-            default:
-                break;
+        const message = Validations[name](value);
+        
+        if (message){
+            formErrors[name] = message;
+        }else{
+            delete formErrors[name];
         }
-        this.setState({ formErrors, [name]: value }, () => console.log(this.state));
-
+        
+        this.setState({ formErrors, [name]: value, profileDirty : true, updated : false });
     };
 
 
@@ -151,140 +82,116 @@ export class Profile extends Component {
                 <div className="form-wrapper">
                     <h1>Account Information</h1>
                     <form onSubmit={this.handleSubmit} noValidate>
-                        <div className="firstName">
-                            <label htmlFor="firstName">First Name</label>
+                       
+                        <div>
+                            <label htmlFor="fullName">Full Name</label>
                             <input
-                                className={formErrors.firstName.length > 0 ? "error" : null}
-                                placeholder="First Name"
+                                className={formErrors.fullName ? "error" : null}
+                                placeholder="Full Name"
                                 type="text"
-                                name="firstName"
+                                name="fullName"
+                                value={this.state.fullName}
                                 noValidate
                                 onChange={this.handleChange} />
 
-                            {formErrors.firstName.length > 0 && (
-                                <span className="errorMessage">{formErrors.firstName}</span>
+                            {formErrors.fullName && (
+                                <span className="errorMessage">{formErrors.fullName}</span>
                             )}
-
                         </div>
-                        <div className="lastName">
-                            <label htmlFor="lastName">Last Name</label>
+                       
+                        <div>
+                            <label htmlFor="address1">Address Line 1</label>
                             <input
-                                className={formErrors.lastName.length > 0 ? "error" : null}
-                                placeholder="Last Name"
-                                type="text"
-                                name="lastName"
-                                noValidate
-                                onChange={this.handleChange} />
-
-                            {formErrors.lastName.length > 0 && (
-                                <span className="errorMessage">{formErrors.lastName}</span>
-                            )}
-
-                        </div>
-                        <div className="email">
-                            <label htmlFor="email">Email</label>
-                            <input
-                                className={formErrors.email.length > 0 ? "error" : null}
-                                placeholder="Email"
-                                type="email"
-                                name="email"
-                                noValidate
-                                onChange={this.handleChange} />
-
-                            {formErrors.email.length > 0 && (
-                                <span className="errorMessage">{formErrors.email}</span>
-                            )}
-
-                        </div>
-                        <div className="address1">
-                            <label htmlFor="address1">Address</label>
-                            <input
-                                className={formErrors.address1.length > 0 ? "error" : null}
+                                className={formErrors.address1 ? "error" : null}
                                 placeholder="Address"
                                 type="text"
                                 name="address1"
+                                value={this.state.address1}
                                 noValidate
                                 onChange={this.handleChange} />
 
-                            {formErrors.address1.length > 0 && (
+                            {formErrors.address1 && (
                                 <span className="errorMessage">{formErrors.address1}</span>
                             )}
-
-
                         </div>
                         
-                        <div className="address2">
-                            <label htmlFor="address2">Address (Additional)</label>
+                        <div>
+                            <label htmlFor="address2">Address Line 2</label>
                             <input
-                                className={formErrors.address2.length > 0 ? "error" : null}
-                                placeholder="Address"
+                                className={formErrors.address2 ? "error" : null}
+                                placeholder="(optional)"
                                 type="text"
                                 name="address2"
+                                value={this.state.address2}
                                 noValidate
                                 onChange={this.handleChange} />
 
-                            {formErrors.address2.length > 0 && (
+                            {formErrors.address2 && (
                                 <span className="errorMessage">{formErrors.address2}</span>
                             )}
-
-
                         </div>
                         
-                        <div className="city">
+                        <div>
                             <label htmlFor="city">City</label>
                             <input
-                                className={formErrors.city.length > 0 ? "error" : null}
+                                className={formErrors.city ? "error" : null}
                                 placeholder="City"
                                 type="text"
                                 name="city"
+                                value={this.state.city}
                                 noValidate
                                 onChange={this.handleChange} />
 
-                            {formErrors.city.length > 0 && (
+                            {formErrors.city && (
                                 <span className="errorMessage">{formErrors.city}</span>
                             )}
-
                         </div>
-                        <div className="state">
+                        
+                        <div>
                             <label htmlFor="state">State</label>
                             <select
-                              className={formErrors.state.length > 0 ? "error" : null}
+                              className={formErrors.state ? "error" : null}
                                 type="text"
                                 name="state"
                                 noValidate
                                 onChange={this.handleChange}>
                                 {
-                                    Profile.states.map(state=> (
-                                        <option value={state}>{state}</option>
+                                    States.map(state=> (
+                                        <option value={state} selected={this.state.state == state && "selected"}>{state}</option>
                                     ))
                                 }
                                
                             </select>
                            
-                            {formErrors.state.length > 0 && (
+                            {formErrors.state && (
                                 <span className="errorMessage">{formErrors.state}</span>
                             )}
-
                         </div>
-                        <div className="zip">
+                        
+                        <div>
                             <label htmlFor="zip">Zip</label>
                             <input
-                                className={formErrors.zip.length > 0 ? "error" : null}
+                                className={formErrors.zip ? "error" : null}
                                 placeholder="Zip"
                                 type="text"
                                 name="zip"
+                                value={this.state.zip}
                                 noValidate
                                 onChange={this.handleChange} />
 
-                            {formErrors.zip.length > 0 && (
+                            {formErrors.zip && (
                                 <span className="errorMessage">{formErrors.zip}</span>
                             )}
 
                         </div>
-                        <div className="updateAccount">
-                            <button type="submit">Update Account</button>
-                           
-
+                        {this.state.updateError && (
+                                <div className="errorMessage">{this.state.updateError}</div>
+                            )}
+                        {this.state.updated && (
+                            <div>Updated!</div>
+                        )}
+                        <div>
+                            <button type="submit" disabled={!this.state.profileDirty}>Update Account</button>
                         </div>
                     </form>
                 </div>
