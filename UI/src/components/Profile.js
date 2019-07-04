@@ -22,16 +22,18 @@ const formValid = ({ formErrors, ...rest }) => {
 
 
 
-
-
 export class Profile extends Component {
+    
+    static states = [ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY' ];
+    
     constructor(props) {
         super(props);
         this.state = {
             firstName: null,
             lastName: null,
             email: null,
-            address: null,
+            address1: null,
+            address2: null,
             city: null,
             state: null,
             zip: null,
@@ -39,7 +41,8 @@ export class Profile extends Component {
                 firstName: "",
                 lastName: "",
                 email: "",
-                address: "",
+                address1: "",
+                address2: "",
                 city: "",
                 state: "",
                 zip: ""
@@ -57,7 +60,8 @@ export class Profile extends Component {
                   First Name: ${this.state.firstName}
                   Last Name: ${this.state.lastName}
                   Email: ${this.state.email}
-                  Address: ${this.state.adress}
+                  Address1: ${this.state.adress1},
+                  Address2: ${this.state.adress2}
                   City: ${this.state.city}
                   State: ${this.state.state}
                   Zip: ${this.state.zip}
@@ -95,29 +99,37 @@ export class Profile extends Component {
                         : "invalid email address";
                 break;
 
-            case 'address':
-                formErrors.password =
+            case 'address1':
+                formErrors.address1 =
+                    value.length < 3
+                        ? "minimum 3 characters required"
+                        : "";
+
+                break;
+                
+            case 'address2':
+                formErrors.address2 =
                     value.length < 3
                         ? "minimum 3 characters required"
                         : "";
 
                 break;
             case 'city':
-                formErrors.password =
+                formErrors.city =
                     value.length < 3
                         ? "minimum 3 characters required"
                         : "";
 
                 break;
             case 'state':
-                formErrors.password =
+                formErrors.state =
                     value.length < 2
                         ? "minimum 2 characters required"
                         : "";
 
                 break;
             case 'zip':
-                formErrors.password =
+                formErrors.zip =
                     value.length < 5
                         ? "minimum 5 characters required"
                         : "";
@@ -184,22 +196,40 @@ export class Profile extends Component {
                             )}
 
                         </div>
-                        <div className="address">
-                            <label htmlFor="address">Address</label>
+                        <div className="address1">
+                            <label htmlFor="address1">Address</label>
                             <input
-                                className={formErrors.address.length > 0 ? "error" : null}
+                                className={formErrors.address1.length > 0 ? "error" : null}
                                 placeholder="Address"
-                                type="address"
-                                name="address"
+                                type="text"
+                                name="address1"
                                 noValidate
                                 onChange={this.handleChange} />
 
-                            {formErrors.address.length > 0 && (
-                                <span className="errorMessage">{formErrors.address}</span>
+                            {formErrors.address1.length > 0 && (
+                                <span className="errorMessage">{formErrors.address1}</span>
                             )}
 
 
                         </div>
+                        
+                        <div className="address2">
+                            <label htmlFor="address2">Address (Additional)</label>
+                            <input
+                                className={formErrors.address2.length > 0 ? "error" : null}
+                                placeholder="Address"
+                                type="text"
+                                name="address2"
+                                noValidate
+                                onChange={this.handleChange} />
+
+                            {formErrors.address2.length > 0 && (
+                                <span className="errorMessage">{formErrors.address2}</span>
+                            )}
+
+
+                        </div>
+                        
                         <div className="city">
                             <label htmlFor="city">City</label>
                             <input
@@ -217,14 +247,20 @@ export class Profile extends Component {
                         </div>
                         <div className="state">
                             <label htmlFor="state">State</label>
-                            <input
-                                className={formErrors.state.length > 0 ? "error" : null}
-                                placeholder="State"
+                            <select
+                              className={formErrors.state.length > 0 ? "error" : null}
                                 type="text"
                                 name="state"
                                 noValidate
-                                onChange={this.handleChange} />
-
+                                onChange={this.handleChange}>
+                                {
+                                    Profile.states.map(state=> (
+                                        <option value={state}>{state}</option>
+                                    ))
+                                }
+                               
+                            </select>
+                           
                             {formErrors.state.length > 0 && (
                                 <span className="errorMessage">{formErrors.state}</span>
                             )}

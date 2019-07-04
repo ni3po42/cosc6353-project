@@ -3,7 +3,14 @@ import { Pagination } from 'react-bootstrap'
 
 class QuoteTable extends React.Component
 {
-    static Headers = [{field:"header1", display:"Header 1"}, {field:"header2", display:"Header 2"}, {field:"header3", display:"Header 3"}];
+    static Headers = [
+        {field:"key", display:"Quote Id"}, 
+        {field:"gallonsRequested", display:"Gallons Requested"}, 
+        {field:"deliveryAddress", display:"Delivery Address"},
+        {field:"deliveryDate", display:"Delivery Date"},
+        {field:"suggestedPrice", display:"Suggested Price"},
+        {field:"totalAmount", display:"Total Amount Due"}
+        ];
     
     constructor(props){
         super(props);
@@ -12,7 +19,12 @@ class QuoteTable extends React.Component
         let newPageData = [];
         for(let i = 1; i<=5;i++){
             newPageData.push({
-                "key": start + i,"header1": start+i, "header2": "test2", "header3": "test3"
+                "key": start + i,
+                "gallonsRequested": start+i, 
+                "deliveryAddress": i*i + " street", 
+                "deliveryDate": new Date().toDateString(),
+                "suggestedPrice": 0.0,
+                "totalAmount": 0.0
             });
         }
         
@@ -42,7 +54,12 @@ class QuoteTable extends React.Component
         let newPageData = [];
         for(let i = 1; i<=this.state.pageSize;i++){
             newPageData.push({
-                "key": start + i,"header1": start+i, "header2": "test2", "header3": "test3"
+                "key": start + i,
+                "gallonsRequested": start+i, 
+                "deliveryAddress": i*i + " street", 
+                "deliveryDate": new Date().toDateString(),
+                "suggestedPrice": 0.0,
+                "totalAmount": 0.0
             });
         }
         
@@ -58,7 +75,7 @@ class QuoteTable extends React.Component
             <section>
             
                 {this.state.page.length > 0 && (
-                <table>
+                <table class="table">
                     <thead>
                         <tr>
                             {QuoteTable.Headers.map(h=> (<th key={h.field}>{h.display}</th>))}

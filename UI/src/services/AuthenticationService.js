@@ -49,30 +49,41 @@ const formValid = ({ formErrors, ...rest }) => {
     return valid;
   };
 
-class AuthenticationService
-{
-    
-    authenticate(email, password){
-        
-        //temp
-        localStorage.setItem("accountId", email);
-        
-        return Promise.resolve({});
-    }
-    
-    // getCookieValue(a) {
-    //     let b = document.cookie.match('(^|[^;]+)\\s*' + a + '\\s*=\\s*([^;]+)');
-    //     return b ? b.pop() : '';
-    // }
-    
-    isAuthenticated(){
-        //temp
-        return !!localStorage.getItem("accountId");
-    }
-    
-    logOff(){
-        localStorage.removeItem("accountId");
-    }
+
+const listeners = new Set();
+
+
+function RegisterListener(callback){
+    listeners.add(callback);
 }
 
-export default AuthenticationService;
+function UnregisterListener(callback){
+    listeners.delete(callback);
+}
+
+function Authenticate(email, password){
+    
+    //temp
+    localStorage.setItem("accountId", email);
+    
+    listeners.forEach(callback => callback(true));
+    
+    return Promise.resolve({});
+}
+
+// getCookieValue(a) {
+//     let b = document.cookie.match('(^|[^;]+)\\s*' + a + '\\s*=\\s*([^;]+)');
+//     return b ? b.pop() : '';
+// }
+
+function IsAuthenticated(){
+    //temp
+    return !!localStorage.getItem("accountId");
+}
+
+function LogOff(){
+    localStorage.removeItem("accountId");
+    listeners.forEach(callback => callback(true));
+}
+
+export { Authenticate, IsAuthenticated, LogOff, RegisterListener, UnregisterListener };

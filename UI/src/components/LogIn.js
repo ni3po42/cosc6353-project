@@ -1,10 +1,9 @@
 import React from 'react';
 import Logger from '../services/Logger.js';
-import AuthenticationService from '../services/AuthenticationService.js';
+import { Authenticate } from '../services/AuthenticationService.js';
 
 import { Link } from 'react-router-dom';
 import { GenericInputChange } from './Utilities.js';
-
 
 class LogIn extends React.Component {
 
@@ -17,12 +16,10 @@ class LogIn extends React.Component {
         };
         
         this.handleInputChange = GenericInputChange(this);
-        this.authenticateService = new AuthenticationService();
     }
 
     handleSubmit = async (event) => {
-        await this.authenticateService
-            .authenticate(this.state.email, this.state.password)
+        await Authenticate(this.state.email, this.state.password)
             .then(()=> this.goHome())
             .catch((e)=>this.loginDenied(e.error));
     }

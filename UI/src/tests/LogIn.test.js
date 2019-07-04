@@ -6,13 +6,7 @@ import { mount } from 'enzyme';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withRouter } from 'react-router';
 
-const mockAuthenticate = jest.fn();
-jest.mock('../services/AuthenticationService.js', () => {
-  return jest.fn().mockImplementation(() => {
-    return {authenticate: mockAuthenticate};
-  });
-});
-
+jest.mock('../services/AuthenticationService.js', () => ({Authenticate: jest.fn()}));
 
 const createSpyObj = (baseName, methodNames) => {
     return methodNames.reduce((acc,k)=> {
@@ -30,8 +24,7 @@ describe("Login Component tests", ()=>{
 
     beforeEach(() => {
       // Clear all instances and calls to constructor and all methods:
-      AuthenticationService.mockClear();
-      mockAuthenticate.mockClear();
+      AuthenticationService.Authenticate.mockClear();
     });
 
 
@@ -49,7 +42,7 @@ describe("Login Component tests", ()=>{
         const component = createLoginComp({ history});
         const instance = component.instance();
         
-        const asyncMock = mockAuthenticate.mockResolvedValue({});
+        const asyncMock = AuthenticationService.Authenticate.mockResolvedValue({});
         
         jest.spyOn(instance, 'goHome');
         jest.spyOn(instance, 'loginDenied');
@@ -63,7 +56,7 @@ describe("Login Component tests", ()=>{
         
         //assert
         await asyncMock();
-        expect(mockAuthenticate).toHaveBeenCalledWith("user@mail.org", "password");
+        expect(AuthenticationService.Authenticate).toHaveBeenCalledWith("user@mail.org", "password");
         expect(instance.goHome).toHaveBeenCalled();
         expect(history.push).toHaveBeenCalledWith('/');
         expect(instance.loginDenied).not.toHaveBeenCalled();
@@ -76,7 +69,7 @@ describe("Login Component tests", ()=>{
         const component = createLoginComp({ history });
         const instance = component.instance();
         
-        const asyncMock = mockAuthenticate.mockRejectedValue({ error : "error message"});
+        const asyncMock = AuthenticationService.Authenticate.mockRejectedValue({ error : "error message"});
         
         jest.spyOn(instance, 'goHome');
         jest.spyOn(instance, 'loginDenied');
@@ -96,7 +89,7 @@ describe("Login Component tests", ()=>{
         catch (e)
         {        }
         
-        expect(mockAuthenticate).toHaveBeenCalledWith("user@mail.org", "nope");
+        expect(AuthenticationService.Authenticate).toHaveBeenCalledWith("user@mail.org", "nope");
         expect(instance.goHome).not.toHaveBeenCalled();
         expect(history.push).not.toHaveBeenCalledWith('/');
         expect(instance.loginDenied).toHaveBeenCalledWith("error message");
