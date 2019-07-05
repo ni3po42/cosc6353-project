@@ -98,4 +98,4 @@ function LogOff(){
     listeners.forEach(callback => callback(true));
 }
 
-export { Authenticate, IsAuthenticated, LogOff, RegisterListener, UnregisterListener, GetAccount };
+export { Authenticate, IsAuthenticated, LogOff, RegisterListener, UnregisterListener, GetAccount, CreateNewAccount };

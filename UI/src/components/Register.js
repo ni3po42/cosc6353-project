@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import "../css/App.css";
 
 
+import { CreateNewAccount } from '../services/AuthenticationService.js';
+
 import { ValidateAll } from "common/validations/core";
 import { Validations } from "common/validations/register";
 
@@ -20,7 +22,9 @@ import { Validations } from "common/validations/register";
             ...fields,
             formErrors: {
               ...fields
-            }
+            },
+            registered : false,
+            errorMessage : null
           };
       
         }
@@ -30,10 +34,11 @@ import { Validations } from "common/validations/register";
         var errorMessages = ValidateAll(this.state, Validations);
         if (errorMessages) {
             this.setState({formErrors : errorMessages});
-            console.error("FORM INVALID.E");
             
         } else {
-            console.log("FORM VALID.")
+            CreateNewAccount(this.state.email, this.state.password)
+              .then(()=> this.setState({registered : true}))
+              .catch(e=> this.setState({errorMessage : e}));
         }
     };
       
@@ -56,13 +61,25 @@ import { Validations } from "common/validations/register";
         render() {
       
           const { formErrors } = this.state;
+          
+          if (this.state.registered){
+            return (
+              <div className="Wrapper">
+              <div className="form-wrapper">
+                <h1>Account Created</h1>
+                <Link to="/LogIn" className="btn btn-link">Please Log in.</Link>
+                </div>
+                </div>
+              );
+          }
+          
           return (
             <div className="Wrapper">
               <div className="form-wrapper">
                 <h1>Create Account</h1>
-                <form onSubmit={this.handleSubmit} noValidate>
+                <section>
                  
-                  <div>
+                  <div className="formField wide">
                     <label htmlFor="email">Email</label>
                     <input
                       className={formErrors.email ? "error" : null }
@@ -77,7 +94,7 @@ import { Validations } from "common/validations/register";
                     )}
       
                   </div>
-                  <div>
+                  <div className="formField wide">
                     <label htmlFor="password">Password</label>
                     <input
                       className={formErrors.password ? "error" : null }
@@ -94,8 +111,8 @@ import { Validations } from "common/validations/register";
                     
                   </div>
                   
-                  <div>
-                    <label htmlFor="password">Confirm Password</label>
+                  <div className="formField wide">
+                    <label htmlFor="passwordConfirm">Confirm Password</label>
                     <input
                       className={formErrors.passwordConfirm ? "error" : null }
                       placeholder="Confirm Password"
@@ -112,11 +129,13 @@ import { Validations } from "common/validations/register";
                   </div>
                   
                   <div>
-                    <button type="submit">Create Account</button>
+                    <button type="submit" onClick={this.handleSubmit}>Create Account</button>
+                    {this.state.errorMessage && (
+                        <div className="errorMessage">{this.state.errorMessage}</div>
+                      )}
                     <Link to="/LogIn" className="btn btn-link">Already Have An Account?</Link>
-                 
                   </div>
-                </form>
+                </section>
               </div>
             </div>
           );

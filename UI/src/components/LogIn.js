@@ -2,6 +2,9 @@ import React from 'react';
 import Logger from '../services/Logger.js';
 import { Authenticate } from '../services/AuthenticationService.js';
 
+
+import {GetProfile} from "../services/ProfileService";
+
 import { Link } from 'react-router-dom';
 import { GenericInputChange } from './Utilities.js';
 
@@ -20,12 +23,20 @@ class LogIn extends React.Component {
 
     handleSubmit = async (event) => {
         await Authenticate(this.state.email, this.state.password)
-            .then(()=> this.goHome())
+            .then(account => 
+            GetProfile(account.id)
+                .then(()=> this.goHome())
+                .catch(()=> this.updateProfile())
+            )
             .catch((e)=>this.loginDenied(e));
     }
 
     goHome = () =>{
         this.props.history.push('/');
+    }
+
+    updateProfile = () =>{
+        this.props.history.push('/Profile');
     }
 
     loginDenied = (message) =>{
@@ -40,7 +51,7 @@ class LogIn extends React.Component {
                 <div className="form-wrapper">
                     <h1>Sign In</h1>
                     <section>
-                        <div className="email">
+                        <div className="formField wide">
                             <label htmlFor="email">Email</label>
                             <input 
                                 className={errorMessage ? "error" : null }
@@ -50,7 +61,7 @@ class LogIn extends React.Component {
                                 value={this.state.email} 
                                 onChange={this.handleInputChange} />
                         </div>
-                        <div className="password">
+                        <div className="formField wide">
                             <label htmlFor="password">Password</label>
                             <input 
                                 className={errorMessage ? "error" : null }
@@ -63,11 +74,9 @@ class LogIn extends React.Component {
                         {errorMessage && (
                                 <div className="errorMessage">{errorMessage}</div>
                             )}
-                        <div className="Sign In">
+                        <div>
                             <button type="submit" onClick={this.handleSubmit}>Sign In</button>
 
-                            
-                            
                             <Link to="/Register" className="btn btn-link">Don't have an Account?</Link>
                         </div>
                     </section>

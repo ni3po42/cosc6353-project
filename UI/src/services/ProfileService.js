@@ -47,14 +47,8 @@ function GetProfile(accountId){
 }
 
 function UpdateProfile(accountId, profile){
-    if (profiles[profile.id] && profiles[profile.id].accountId === accountId){
-        profiles[profile.id] = profile;
-        
-        return Promise.resolve(profile);
-    }else if (profile[profile.id].accountId !== accountId){
-        return Promise.reject("Error updating profile.");
-    }
-    else{//new
+    
+    if (!(accountId in hashTable)){//new account
         
         const newId = "uuid" + (Object.keys(profiles).length + 1).toString().padStart(4,"0");
         profile.id = newId;
@@ -62,6 +56,12 @@ function UpdateProfile(accountId, profile){
         profiles[newId] = profile;
         hashTable[accountId] = newId;
         
+        return Promise.resolve(profile);
+        
+    }else{
+        const profileId = hashTable[accountId];
+        profile.id = profileId;
+        profiles[profile.id] = profile;
         return Promise.resolve(profile);
     }
 }

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Pagination } from 'react-bootstrap'
 
+import { Link } from 'react-router-dom';
+
 import { GetQuotes } from "../services/QuoteService";
 import { GetAccount } from '../services/AuthenticationService';
 import { GetProfile} from "../services/ProfileService";
@@ -78,6 +80,12 @@ class QuoteTable extends React.Component
             
             <section>
             
+            {this.state.page.length === 0 && (
+                <div>
+                    You have no quote history. 
+                    <Link to="/NewQuote">Get a quote now!</Link>
+                </div>
+            )}
                 {this.state.page.length > 0 && (
                 <table class="table">
                     <thead>

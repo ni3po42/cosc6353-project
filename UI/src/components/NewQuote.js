@@ -15,7 +15,7 @@ export class NewQuote extends React.Component {
         super(props);
         
         const fields = {
-            gallonsRequested: 0, 
+            gallonsRequested: null, 
             deliveryAddress: {
                 address1: "",
                 address2: "",
@@ -32,7 +32,8 @@ export class NewQuote extends React.Component {
             ...fields,
             formErrors :
             {
-                ...fields
+                gallonsRequested: null,
+                deliveryDate: null
             }
         };
         
@@ -86,7 +87,7 @@ export class NewQuote extends React.Component {
                     <h1>Get a Quote</h1>
                     <form onSubmit={this.handleSubmit} noValidate>
                        
-                        <div>
+                        <div className="formField wide">
                             <label htmlFor="gallonsRequested">Gallons Requested</label>
                             <input
                                 className={formErrors.gallonsRequested ? "error" : null}
@@ -103,20 +104,18 @@ export class NewQuote extends React.Component {
                         
                         <hr />
                         
-                        <div>
+                        <div className="formField wide">
                             <div>Delivery Address:</div>
                             <div>{this.state.deliveryAddress.address1}</div>
                             { this.state.deliveryAddress.address2 && (
                                 <div>{this.state.deliveryAddress.address1}</div>
                             )}
-                            <div>{this.state.deliveryAddress.city}</div>
-                            <div>{this.state.deliveryAddress.state}</div>
-                            <div>{this.state.deliveryAddress.zip}</div>
+                            <div>{this.state.deliveryAddress.city}, {this.state.deliveryAddress.state} {this.state.deliveryAddress.zip}</div>
                         </div>
                         
                         <hr />
                         
-                        <div>
+                        <div className="formField wide">
                             <label htmlFor="deliveryDate">Delivery Date</label>
                             <input
                                 className={formErrors.deliveryDate ? "error" : null}
@@ -135,13 +134,17 @@ export class NewQuote extends React.Component {
                             <button type="submit">Get Quote</button>
                          </div>
                          <hr />
-                         
-                        <div>
-                            <span>Suggested Price: {this.state.suggestedPrice}</span>
-                        </div>
-                         <div>
-                            <span>Total Amount Due: {this.state.suggestedPrice * this.state.gallonsRequested}</span>
-                        </div>
+                        
+                        {this.state.suggestedPrice && ( 
+                        <React.Fragment>
+                            <div className="formField wide">
+                                <span>Suggested Price: ${this.state.suggestedPrice}</span>
+                            </div>
+                             <div className="formField wide">
+                                <span>Total Amount Due: ${this.state.suggestedPrice * this.state.gallonsRequested}</span>
+                            </div>
+                        </React.Fragment>
+                        )}
                     </form>
                     
                     <div>

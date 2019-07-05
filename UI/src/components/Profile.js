@@ -83,7 +83,7 @@ export class Profile extends Component {
                     <h1>Account Information</h1>
                     <form onSubmit={this.handleSubmit} noValidate>
                        
-                        <div>
+                        <div className="formField wide">
                             <label htmlFor="fullName">Full Name</label>
                             <input
                                 className={formErrors.fullName ? "error" : null}
@@ -99,7 +99,7 @@ export class Profile extends Component {
                             )}
                         </div>
                        
-                        <div>
+                        <div className="formField wide">
                             <label htmlFor="address1">Address Line 1</label>
                             <input
                                 className={formErrors.address1 ? "error" : null}
@@ -115,7 +115,7 @@ export class Profile extends Component {
                             )}
                         </div>
                         
-                        <div>
+                        <div className="formField wide">
                             <label htmlFor="address2">Address Line 2</label>
                             <input
                                 className={formErrors.address2 ? "error" : null}
@@ -131,7 +131,7 @@ export class Profile extends Component {
                             )}
                         </div>
                         
-                        <div>
+                        <div className="formField wide">
                             <label htmlFor="city">City</label>
                             <input
                                 className={formErrors.city ? "error" : null}
@@ -147,7 +147,7 @@ export class Profile extends Component {
                             )}
                         </div>
                         
-                        <div>
+                        <div className="formField wide">
                             <label htmlFor="state">State</label>
                             <select
                               className={formErrors.state ? "error" : null}
@@ -168,7 +168,7 @@ export class Profile extends Component {
                             )}
                         </div>
                         
-                        <div>
+                        <div className="formField wide">
                             <label htmlFor="zip">Zip</label>
                             <input
                                 className={formErrors.zip ? "error" : null}
