@@ -9,12 +9,20 @@ export class ProtectedRoute extends React.Component
         super(props);
     }
     
+    renderRedirect = (to) =>{
+        return (<Redirect to={to} />);
+    }
+    
+    renderRoute = (params) => {
+        return (<Route {...params}/>);
+    }
+    
     render(){
         if (!IsAuthenticated()){
-            return (<Redirect to={this.props.redirectTo} />);
+            return this.renderRedirect(this.props.redirectTo);
         }
         
         const { redirectTo, ...theRest } = this.props;
-        return (<Route {...theRest}/>);
+        return this.renderRoute(theRest);
     }
 }

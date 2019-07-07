@@ -24,8 +24,7 @@ export class NewQuote extends React.Component {
                 zip : ""
             }, 
             deliveryDate: "",
-            suggestedPrice: null,
-           // totalAmount": 0.0
+            suggestedPrice: null
         };
         
         this.state = {
@@ -79,6 +78,31 @@ export class NewQuote extends React.Component {
         this.setState({ formErrors, [name]: value, suggestedPrice: null });
     };
     
+    renderSuggestedPrice = () =>
+        this.state.suggestedPrice && (
+            <React.Fragment>
+                <div className="formField wide">
+                    <span>Suggested Price: ${this.state.suggestedPrice}</span>
+                </div>
+                 <div className="formField wide">
+                    <span>Total Amount Due: ${this.state.suggestedPrice * this.state.gallonsRequested}</span>
+                </div>
+            </React.Fragment>
+        );
+    
+    renderErrorMessage = (message) => (
+        message && (<span className="errorMessage">{message}</span>)
+    );
+    
+    renderDeliveryAddress = (address) => (
+        <div className="formField wide">
+            <div>Delivery Address:</div>
+            <div>{address.address1}</div>
+            { address.address2 && (<div>{address.address2}</div>)}
+            <div>{address.city}, {address.state} {address.zip}</div>
+        </div>
+        );
+    
     render(){
         const { formErrors } = this.state;
         return (
@@ -90,44 +114,31 @@ export class NewQuote extends React.Component {
                         <div className="formField wide">
                             <label htmlFor="gallonsRequested">Gallons Requested</label>
                             <input
-                                className={formErrors.gallonsRequested ? "error" : null}
+                                className={formErrors.gallonsRequested && "error"}
                                 placeholder="0"
                                 type="text"
                                 name="gallonsRequested"
                                 noValidate
                                 onChange={this.handleChange} />
-
-                            {formErrors.gallonsRequested && (
-                                <span className="errorMessage">{formErrors.gallonsRequested}</span>
-                            )}
+                            {this.renderErrorMessage(formErrors.gallonsRequested)}
                         </div>
                         
                         <hr />
                         
-                        <div className="formField wide">
-                            <div>Delivery Address:</div>
-                            <div>{this.state.deliveryAddress.address1}</div>
-                            { this.state.deliveryAddress.address2 && (
-                                <div>{this.state.deliveryAddress.address1}</div>
-                            )}
-                            <div>{this.state.deliveryAddress.city}, {this.state.deliveryAddress.state} {this.state.deliveryAddress.zip}</div>
-                        </div>
+                        {this.renderDeliveryAddress(this.state.deliveryAddress)}
                         
                         <hr />
                         
                         <div className="formField wide">
                             <label htmlFor="deliveryDate">Delivery Date</label>
                             <input
-                                className={formErrors.deliveryDate ? "error" : null}
+                                className={formErrors.deliveryDate && "error"}
                                 type="date"
                                 name="deliveryDate"
                                 placeholder="mm/dd/yyyy"
                                 noValidate
                                 onChange={this.handleChange} />
-
-                            {formErrors.deliveryDate && (
-                                <span className="errorMessage">{formErrors.deliveryDate}</span>
-                            )}
+                            {this.renderErrorMessage(formErrors.deliveryDate)}
                         </div>
                         
                          <div>
@@ -135,16 +146,7 @@ export class NewQuote extends React.Component {
                          </div>
                          <hr />
                         
-                        {this.state.suggestedPrice && ( 
-                        <React.Fragment>
-                            <div className="formField wide">
-                                <span>Suggested Price: ${this.state.suggestedPrice}</span>
-                            </div>
-                             <div className="formField wide">
-                                <span>Total Amount Due: ${this.state.suggestedPrice * this.state.gallonsRequested}</span>
-                            </div>
-                        </React.Fragment>
-                        )}
+                        {this.renderSuggestedPrice()}
                     </form>
                     
                     <div>

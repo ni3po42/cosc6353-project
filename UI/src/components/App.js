@@ -9,7 +9,6 @@ import { Home } from './Home';
 import { Register } from './Register';
 import { LogIn } from './LogIn';
 import { Profile } from './Profile';
-import { NoMatch } from './NoMatch';
 import { NavigationBar} from './NavigationBar';
 import { Jumbotron } from './Jumbotron';
 import { QuoteTable } from './QuoteHistory';
@@ -33,7 +32,9 @@ class App extends Component {
           <ProtectedRoute redirectTo="/LogIn" path= "/NewQuote" component={NewQuote}/>
           <ProtectedRoute redirectTo="/LogIn" path= "/QuoteHistory" component={QuoteTable}/>
           <ProtectedRoute redirectTo="/LogIn" path= "/LogOff" component={LogOff}/>
-          <Route component={NoMatch}/>
+          <Route>
+            <div><h2>404</h2></div>
+          </Route>
         </Switch>
       </Router>
     </Container>
