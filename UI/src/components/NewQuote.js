@@ -2,12 +2,15 @@ import React, { Component } from "react";
 
 import { Link } from 'react-router-dom';
 
+import { Address } from "./Address";
+
 import { CreateQuote} from "../services/QuoteService";
-import { GetAccount } from '../services/AuthenticationService';
 import { GetProfile} from "../services/ProfileService";
 
 import { ValidateAll } from "common/validations/core";
 import { Validations } from "common/validations/quoteRequest";
+
+import { SetErrorClass, ErrorMessageRender } from "./Utilities";
 
 export class NewQuote extends React.Component {
     
@@ -36,11 +39,12 @@ export class NewQuote extends React.Component {
             }
         };
         
+        this.renderErrorClass = SetErrorClass(this, "formErrors");
+        this.renderErrorMessage = ErrorMessageRender(this);
     }
     
     componentDidMount() {
-        GetAccount()
-            .then(account=> GetProfile(account.id))
+        GetProfile()
             .then(profile => {
                 const { address1, address2, city, state, zip } = profile;
                 this.setState({ deliveryAddress : { address1, address2, city, state, zip}});
@@ -55,11 +59,8 @@ export class NewQuote extends React.Component {
             
         } else {
             const {gallonsRequested, deliveryDate} = this.state;
-            GetAccount()
-            .then(account=> CreateQuote(account.id, {gallonsRequested, deliveryDate}))
-            .then((quote) => {
-                this.setState({suggestedPrice : quote.suggestedPrice});
-            });
+            CreateQuote({gallonsRequested, deliveryDate})
+                .then((quote) => this.setState({suggestedPrice : quote.suggestedPrice}));
         }
     };
       
@@ -90,16 +91,11 @@ export class NewQuote extends React.Component {
             </React.Fragment>
         );
     
-    renderErrorMessage = (message) => (
-        message && (<span className="errorMessage">{message}</span>)
-    );
-    
+   
     renderDeliveryAddress = (address) => (
         <div className="formField wide">
             <div>Delivery Address:</div>
-            <div>{address.address1}</div>
-            { address.address2 && (<div>{address.address2}</div>)}
-            <div>{address.city}, {address.state} {address.zip}</div>
+            <Address {...address} />
         </div>
         );
     
@@ -114,7 +110,7 @@ export class NewQuote extends React.Component {
                         <div className="formField wide">
                             <label htmlFor="gallonsRequested">Gallons Requested</label>
                             <input
-                                className={formErrors.gallonsRequested && "error"}
+                                className={this.renderErrorClass("gallonsRequested")}
                                 placeholder="0"
                                 type="text"
                                 name="gallonsRequested"
@@ -132,7 +128,7 @@ export class NewQuote extends React.Component {
                         <div className="formField wide">
                             <label htmlFor="deliveryDate">Delivery Date</label>
                             <input
-                                className={formErrors.deliveryDate && "error"}
+                                className={this.renderErrorClass("deliveryDate")}
                                 type="date"
                                 name="deliveryDate"
                                 placeholder="mm/dd/yyyy"

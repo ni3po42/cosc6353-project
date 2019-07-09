@@ -68,6 +68,10 @@ function GetAccount(){
     return Promise.resolve(returnAccount);
 }
 
+function GetCurrentAccountId(){
+    return localStorage.getItem("accountId");
+}
+
 function CreateNewAccount(email, password){
     
     for(let id in accounts){
@@ -98,4 +102,4 @@ function LogOff(){
     listeners.forEach(callback => callback(true));
 }
 
-export { Authenticate, IsAuthenticated, LogOff, RegisterListener, UnregisterListener, GetAccount, CreateNewAccount };
+export { Authenticate, IsAuthenticated, LogOff, RegisterListener, UnregisterListener, GetAccount, CreateNewAccount, GetCurrentAccountId };

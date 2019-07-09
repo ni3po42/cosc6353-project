@@ -1,6 +1,8 @@
 import Logger from './Logger.js';
 import axios from 'axios';
 
+import { GetCurrentAccountId } from '../services/AuthenticationService';
+
 //stubbed data
 const profiles = {
   
@@ -33,7 +35,9 @@ const hashTable = {
   "uuid_a_0002" : "uuid0002"
 };
 
-function GetProfile(accountId){
+function GetProfile(){
+    const accountId = GetCurrentAccountId();
+    
     const profileId = hashTable[accountId];
     
     if (!profileId){
@@ -46,7 +50,8 @@ function GetProfile(accountId){
     }
 }
 
-function UpdateProfile(accountId, profile){
+function UpdateProfile( profile){
+    const accountId = GetCurrentAccountId();
     
     if (!(accountId in hashTable)){//new account
         

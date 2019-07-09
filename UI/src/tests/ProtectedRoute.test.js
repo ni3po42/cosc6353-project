@@ -6,8 +6,6 @@ import { BrowserRouter as Router,  Route, Redirect } from 'react-router-dom';
 import { ProtectedRoute } from '../components/ProtectedRoute.js';
 import { IsAuthenticated } from '../services/AuthenticationService.js';
 
-
-
 jest.mock('../services/AuthenticationService.js', () => ({IsAuthenticated: jest.fn()}));
 
 const createComp = (props) => {

@@ -1,4 +1,4 @@
-import { GenericInputChange } from "../components/Utilities";
+import { GenericInputChange, SetErrorClass, ErrorMessageRender, ThenableSetState } from "../components/Utilities";
 
 describe("NewQuote Component tests", ()=>{
 
@@ -59,4 +59,66 @@ describe("NewQuote Component tests", ()=>{
         });
         
     });
+    
+    
+     it('can set error class', async () => {
+        //arrange
+        const obj = {
+            setState : jest.fn(),
+            state : {
+                "formErrors": { "field" : null}
+            }
+        }
+        
+        //act
+        const handler = SetErrorClass(obj, "formErrors");
+        
+        expect(handler).toBeDefined();
+        expect(handler("field")).toBeFalsy();
+        obj.state.formErrors.field = "an error";
+        
+        expect(handler("field")).toBe("error");
+        
+    });
+    
+    it('can render error message', async () => {
+        //arrange
+        const obj = {
+            setState : jest.fn(),
+            state : {
+                "formErrors": { "field" : null}
+            }
+        }
+        
+        //act
+        const handler = ErrorMessageRender(obj, "formErrors");
+        
+        expect(handler).toBeDefined();
+        expect(handler(null)).toBeFalsy();
+        expect(handler(undefined)).toBeFalsy();
+        
+        obj.state.formErrors.field = "an error";
+        
+        expect(handler("field")).toBeTruthy();
+        
+    });
+    
+     it('can make setState thenable', async () => {
+        //arrange
+        const obj = {
+            setState : (updater, callback)=> {
+                callback && callback('test');
+            }
+        }
+        
+        //act
+        const setState = ThenableSetState(obj);
+        
+        expect(setState).toBeDefined();
+        
+        await setState({})
+            .then(val => expect(val).toBe('test'));
+        
+    });
+    
 });

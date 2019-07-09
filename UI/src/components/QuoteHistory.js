@@ -1,21 +1,20 @@
-import React, { Component } from "react";
+import React from "react";
 import { Pagination } from 'react-bootstrap'
 
 import { Link } from 'react-router-dom';
 
 import { GetQuotes } from "../services/QuoteService";
-import { GetAccount } from '../services/AuthenticationService';
-import { GetProfile} from "../services/ProfileService";
+import { Address } from "./Address";
 
 class QuoteTable extends React.Component
 {
     static Headers = [
-        {field:"id", display:"Quote Id"}, 
-        {field:"gallonsRequested", display:"Gallons Requested"}, 
-        {field:"deliveryAddress", display:"Delivery Address"},
-        {field:"deliveryDate", display:"Delivery Date"},
-        {field:"suggestedPrice", display:"Suggested Price"},
-        {field:"totalAmount", display:"Total Amount Due"}
+        {field:"id", display:"Quote Id", render: val => (<span>{val}</span>)}, 
+        {field:"gallonsRequested", display:"Gallons Requested", render: val => (<span>{val}</span>)}, 
+        {field:"deliveryAddress", display:"Delivery Address", render: val => (<Address {...val} />)},
+        {field:"deliveryDate", display:"Delivery Date", render : val => (<span>{val}</span>)},
+        {field:"suggestedPrice", display:"Suggested Price", render : val => (<span>${val}</span>)},
+        {field:"totalAmount", display:"Total Amount Due", render : val => (<span>${val}</span>)}
         ];
     
     constructor(props){
@@ -30,20 +29,8 @@ class QuoteTable extends React.Component
     }
     
     componentDidMount() {
-        GetAccount()
-            .then(account => GetProfile(account.id))
-            .then(profile => {
-                
-                return GetQuotes(profile.accountId)
-                    .then(quotes=> {
-                        var pageData = quotes.map(quote=> ({
-                            ...quote,
-                            deliveryAddress : [profile.address1, profile.address2, profile.city + " ," + profile.state + " " + profile.zip]
-                        }));
-                        this.setState({page : pageData});
-                    });
-            })
-            .catch(e => console.log(e) );
+        GetQuotes()
+            .then(quotes=> this.setState({page : quotes}));
     }
 
     handleClick = (delta, gotoPage) => {
@@ -75,52 +62,43 @@ class QuoteTable extends React.Component
         // })
     }
     
+    renderNoHistory = () => (
+        <div>
+            You have no quote history. 
+            <Link to="/NewQuote">Get a quote now!</Link>
+        </div>
+        );
+    
+    renderTable = (page) => {
+        return (<table class="table">
+            <thead>
+                <tr>
+                    {QuoteTable.Headers.map(h=> (<th key={h.field}>{h.display}</th>))}
+                </tr>
+            </thead>
+            <tbody>
+                {page.map(quote=> (
+                    <tr key={quote.key}>
+                        {QuoteTable.Headers.map(h=> (<td>{h.render(quote[h.field])}</td>))}
+                    </tr>
+                ))}
+            </tbody>
+            <tfoot>
+                <tr><td>
+                <Pagination>
+                    <Pagination.First onClick={()=> this.handleClick(0,1)} />
+                    <Pagination.Prev onClick={()=> this.handleClick(-1)}/>
+                    <Pagination.Item active>{this.state.currentPage}</Pagination.Item>
+                    <Pagination.Next onClick={()=> this.handleClick(1)} />
+                    <Pagination.Last onClick={()=> this.handleClick(0,this.state.pageCount)} />
+                </Pagination>
+                </td></tr>
+            </tfoot>
+        </table>);
+    }
+    
     render(){
-        return (
-            
-            <section>
-            
-            {this.state.page.length === 0 && (
-                <div>
-                    You have no quote history. 
-                    <Link to="/NewQuote">Get a quote now!</Link>
-                </div>
-            )}
-                {this.state.page.length > 0 && (
-                <table class="table">
-                    <thead>
-                        <tr>
-                            {QuoteTable.Headers.map(h=> (<th key={h.field}>{h.display}</th>))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.page.map(quote=> (
-                            <tr key={quote.key}>
-                                {QuoteTable.Headers.map(h=> (<td key={h.field}>{
-                                Array.isArray(quote[h.field]) ? quote[h.field].map((v)=> <div>{v}</div> ) : quote[h.field]
-                                }</td>))}
-                            </tr>
-                        ))}
-                    </tbody>
-                    <tfoot>
-                        <tr><td>
-                        <Pagination>
-                            <Pagination.First onClick={()=> this.handleClick(0,1)} />
-                            <Pagination.Prev onClick={()=> this.handleClick(-1)}/>
-                            
-                            <Pagination.Item active>{this.state.currentPage}</Pagination.Item>
-                            
-                            <Pagination.Next onClick={()=> this.handleClick(1)} />
-                            <Pagination.Last onClick={()=> this.handleClick(0,this.state.pageCount)} />
-                        </Pagination>
-                        </td></tr>
-                    </tfoot>
-                </table>
-                    
-                )}
-                
-            </section>
-            );
+        return this.state.page.length === 0 ? this.renderNoHistory() : this.renderTable(this.state.page);
     }
 }
 
