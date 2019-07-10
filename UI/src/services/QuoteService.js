@@ -1,5 +1,5 @@
-import Logger from './Logger.js';
-import axios from 'axios';
+//import Logger from './Logger.js';
+//import axios from 'axios';
 
 import { GetProfile } from "../services/ProfileService";
 import { GetCurrentAccountId } from '../services/AuthenticationService';
@@ -24,16 +24,29 @@ function CreateQuote(quoteRequest){
     return Promise.resolve(newQuote);
 }
 
-function GetQuotes(){
-   const accountId = GetCurrentAccountId();
-   
-   if (!(accountId in quotes)){
+function GetQuotes(query){
+    
+    const {page, ...response} = query;
+    
+    response.currentPage = query.currentPage || 1;
+    response.pageSize = query.pageSize || 20;
+    const currentAccountId = GetCurrentAccountId();
+    
+   if (!(currentAccountId in quotes)){
        return Promise.reject("No quotes for account found.");
    }
    
-   const { address1, address2, city, state, zip } = GetProfile();
-   
-   return Promise.resolve(quotes[accountId].map(q => ({ ...q, totalAmount : q.suggestedPrice * q.gallonsRequested, deliveryAddress:  {address1, address2, city , state, zip} })));
+   return GetProfile()
+            .then(profile => {
+               const {id, accountId, ...address} = profile
+               
+               const newPage = quotes[currentAccountId].map(q => ({ ...q, totalAmount : q.suggestedPrice * q.gallonsRequested, deliveryAddress:  address }));
+               
+               response.pageCount = 1;
+               response.page = newPage;
+               response.numberOfPages = newPage.length;  
+               return response;
+            });
 }
 
 export {CreateQuote, GetQuotes};

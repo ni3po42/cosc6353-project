@@ -1,5 +1,5 @@
-import Logger from './Logger.js';
-import axios from 'axios';
+//import Logger from './Logger.js';
+//import axios from 'axios';
 
 import { GetCurrentAccountId } from '../services/AuthenticationService';
 

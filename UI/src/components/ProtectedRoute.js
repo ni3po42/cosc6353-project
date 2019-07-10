@@ -1,14 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 import { Route, Redirect } from 'react-router-dom';
 
 import { IsAuthenticated } from '../services/AuthenticationService.js';
 
 export class ProtectedRoute extends React.Component
 {
-    constructor(props){
-        super(props);
-    }
-    
     renderRedirect = (to) =>{
         return (<Redirect to={to} />);
     }

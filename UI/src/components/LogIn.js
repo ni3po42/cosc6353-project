@@ -1,5 +1,4 @@
 import React from 'react';
-import Logger from '../services/Logger.js';
 import { Authenticate } from '../services/AuthenticationService.js';
 
 

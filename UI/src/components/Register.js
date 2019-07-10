@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import "../css/App.css";
 
 
+import { SetErrorClass, ErrorMessageRender, ThenableSetState } from "./Utilities";
+
 import { CreateNewAccount } from '../services/AuthenticationService.js';
 
 import { ValidateAll } from "common/validations/core";
@@ -27,18 +29,21 @@ import { Validations } from "common/validations/register";
             errorMessage : null
           };
       
+          this.renderErrorClass = SetErrorClass(this, "formErrors");
+          this.renderErrorMessage = ErrorMessageRender(this);
+          this.promiseSetState = ThenableSetState(this);
         }
       
-    handleSubmit = e => {
+    handleSubmit = async e => {
         e.preventDefault();
         var errorMessages = ValidateAll(this.state, Validations);
         if (errorMessages) {
             this.setState({formErrors : errorMessages});
             
         } else {
-            CreateNewAccount(this.state.email, this.state.password)
-              .then(()=> this.setState({registered : true}))
-              .catch(e=> this.setState({errorMessage : e}));
+            await CreateNewAccount(this.state.email, this.state.password)
+              .then(()=> this.promiseSetState({registered : true}))
+              .catch(e=> this.promiseSetState({errorMessage : e}));
         }
     };
       
@@ -56,14 +61,9 @@ import { Validations } from "common/validations/register";
         
         this.setState({ formErrors, [name]: value });
     };
-      
-      
-        render() {
-      
-          const { formErrors } = this.state;
-          
-          if (this.state.registered){
-            return (
+    
+    renderLoginNotice(){
+       return (
               <div className="Wrapper">
               <div className="form-wrapper">
                 <h1>Account Created</h1>
@@ -71,79 +71,69 @@ import { Validations } from "common/validations/register";
                 </div>
                 </div>
               );
-          }
-          
-          return (
+    }  
+    
+    renderFormErrorMessage(){
+      if (this.state.errorMessage){
+        return (<div className="errorMessage">{this.state.errorMessage}</div>);
+      } 
+    }
+    
+    renderForm(){
+      return (
             <div className="Wrapper">
               <div className="form-wrapper">
                 <h1>Create Account</h1>
                 <section>
-                 
                   <div className="formField wide">
                     <label htmlFor="email">Email</label>
                     <input
-                      className={formErrors.email ? "error" : null }
+                      className={this.renderErrorClass("email")}
                       placeholder="Email"
                       type="email"
                       name="email"
                       noValidate
                       onChange={this.handleChange} />
-      
-                    {formErrors.email && (
-                      <span className="errorMessage">{formErrors.email}</span>
-                    )}
-      
+                    {this.renderErrorMessage("email")}
                   </div>
                   <div className="formField wide">
                     <label htmlFor="password">Password</label>
                     <input
-                      className={formErrors.password ? "error" : null }
+                      className={this.renderErrorClass("password")}
                       placeholder="Password"
                       type="password"
                       name="password"
                       noValidate
                       onChange={this.handleChange} />
-      
-                      {formErrors.password && (
-                        <span className="errorMessage">{formErrors.password}</span>
-                      )}
-      
-                    
+                      {this.renderErrorMessage("password")}
                   </div>
-                  
                   <div className="formField wide">
                     <label htmlFor="passwordConfirm">Confirm Password</label>
                     <input
-                      className={formErrors.passwordConfirm ? "error" : null }
+                      className={this.renderErrorClass("passwordConfirm")}
                       placeholder="Confirm Password"
                       type="password"
                       name="passwordConfirm"
                       noValidate
                       onChange={this.handleChange} />
-      
-                      {formErrors.passwordConfirm && (
-                        <span className="errorMessage">{formErrors.passwordConfirm}</span>
-                      )}
-      
-                    
+                      {this.renderErrorMessage("passwordConfirm")}
                   </div>
-                  
                   <div>
                     <button type="submit" onClick={this.handleSubmit}>Create Account</button>
-                    {this.state.errorMessage && (
-                        <div className="errorMessage">{this.state.errorMessage}</div>
-                      )}
+                    {this.renderFormErrorMessage()}
                     <Link to="/LogIn" className="btn btn-link">Already Have An Account?</Link>
                   </div>
                 </section>
               </div>
             </div>
           );
+    }
+      
+    render() {
+          if (this.state.registered){
+           return this.renderLoginNotice();
+          }else{
+            return this.renderForm();
+          }
         }
       }  
-      
-      
-     
-
-
- 
