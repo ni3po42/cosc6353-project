@@ -21,12 +21,12 @@ var options = {
     root: path.join(__dirname, 'public')
   }
 
-app.get('*', function(req, res) {
-        res.sendFile('./index.html',options); // load the single view file (angular will handle the page changes on the front-end)
-    });
-
 app.use('/api/Login', accountLogin);
 app.use('/api/Profile', profile);
 app.use('/api/Quote', quote);
+
+app.get('*', function(req, res) {
+    res.sendFile('./index.html',options); // load the single view file (angular will handle the page changes on the front-end)
+    });
 
 module.exports = app;
