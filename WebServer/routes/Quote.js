@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const Authenticate = require('../AuthMiddleware');
-const { GetQuoteHistory } = require('../QuoteManager');
+const { GetQuoteHistory } = require('../managers/QuoteManager');
 
 router.get('/', Authenticate, function(req, res) {
   

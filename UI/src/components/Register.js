@@ -41,7 +41,7 @@ import { Validations } from "common/validations/register";
             this.setState({formErrors : errorMessages});
             
         } else {
-            await CreateNewAccount(this.state.email, this.state.password)
+            await CreateNewAccount(this.state.email, this.state.password, this.state.passwordConfirm)
               .then(()=> this.promiseSetState({registered : true}))
               .catch(e=> this.promiseSetState({errorMessage : e}));
         }
@@ -80,6 +80,7 @@ import { Validations } from "common/validations/register";
     }
     
     renderForm(){
+      const { formErrors } = this.state;
       return (
             <div className="Wrapper">
               <div className="form-wrapper">
@@ -94,7 +95,7 @@ import { Validations } from "common/validations/register";
                       name="email"
                       noValidate
                       onChange={this.handleChange} />
-                    {this.renderErrorMessage("email")}
+                    {this.renderErrorMessage(formErrors.email)}
                   </div>
                   <div className="formField wide">
                     <label htmlFor="password">Password</label>
@@ -105,7 +106,7 @@ import { Validations } from "common/validations/register";
                       name="password"
                       noValidate
                       onChange={this.handleChange} />
-                      {this.renderErrorMessage("password")}
+                      {this.renderErrorMessage(formErrors.password)}
                   </div>
                   <div className="formField wide">
                     <label htmlFor="passwordConfirm">Confirm Password</label>
@@ -116,7 +117,7 @@ import { Validations } from "common/validations/register";
                       name="passwordConfirm"
                       noValidate
                       onChange={this.handleChange} />
-                      {this.renderErrorMessage("passwordConfirm")}
+                      {this.renderErrorMessage(formErrors.passwordConfirm)}
                   </div>
                   <div>
                     <button type="submit" onClick={this.handleSubmit}>Create Account</button>

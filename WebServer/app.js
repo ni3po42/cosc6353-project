@@ -3,7 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var accountLogin = require('./routes/AccountLogin');
+var account = require('./routes/Account');
 var profile = require('./routes/Profile');
 var quote = require('./routes/Quote');
 
@@ -21,7 +21,7 @@ var options = {
     root: path.join(__dirname, 'public')
   }
 
-app.use('/api/Login', accountLogin);
+app.use('/api/Account', account);
 app.use('/api/Profile', profile);
 app.use('/api/Quote', quote);
 

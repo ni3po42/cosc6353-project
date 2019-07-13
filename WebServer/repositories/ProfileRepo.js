@@ -1,33 +1,8 @@
 //stubbed data
 const profiles = {
-  
-  "uuid0001": {
-      id : "uuid0001",
-      accountId : "uuid_a_0001",
-      fullName : "Client 1",
-      address1 : "123 Fake st.",
-      address2 : null,
-      city : "Houston",
-      state: "TX",
-      zip: "77001",
-  },
-  "uuid0002": {
-      id : "uuid0002",
-      accountId : "uuid_a_0002",
-      fullName : "Client 1",
-      address1 : "123 Fake st.",
-      address2 : null,
-      city : "Houston",
-      state: "TX",
-      zip: "77001",
-  }
-    
 };
 
 const hashTable = {
-  
-  "uuid_a_0001" : "uuid0001",
-  "uuid_a_0002" : "uuid0002"
 };
 
 function GetProfile(accountId){

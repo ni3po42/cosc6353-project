@@ -1,7 +1,8 @@
 //import Logger from './Logger.js';
 //import axios from 'axios';
 
-import { GetCurrentAccountId } from '../services/AuthenticationService';
+import Cookies from 'js-cookie';
+
 
 //stubbed data
 const profiles = {
@@ -36,7 +37,7 @@ const hashTable = {
 };
 
 function GetProfile(){
-    const accountId = GetCurrentAccountId();
+    const accountId = Cookies.get('auth');//temp
     
     const profileId = hashTable[accountId];
     
@@ -51,7 +52,7 @@ function GetProfile(){
 }
 
 function UpdateProfile( profile){
-    const accountId = GetCurrentAccountId();
+    const accountId = Cookies.get('auth');//temp
     
     if (!(accountId in hashTable)){//new account
         

@@ -1,9 +1,7 @@
-var GetProfile = require("./repositories/ProfileRepo");
+var GetProfile = require("./ProfileRepo");
 
 //stubbed data
 const quotes = {
-  "uuid_a_0001": [],
-  "uuid_a_0002": []
 };
 
 function CreateQuote(accountId, quoteRequest){

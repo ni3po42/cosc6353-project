@@ -22,10 +22,10 @@ class LogIn extends React.Component {
 
     handleSubmit = async (event) => {
         await Authenticate(this.state.email, this.state.password)
-            .then(account => 
-            GetProfile(account.id)
-                .then(()=> this.goHome())
-                .catch(()=> this.updateProfile())
+            .then(() => 
+                GetProfile()
+                    .then(()=> this.goHome())
+                    .catch(()=> this.updateProfile())
             )
             .catch((e)=>this.loginDenied(e));
     }
@@ -39,7 +39,7 @@ class LogIn extends React.Component {
     }
 
     loginDenied = (message) =>{
-        this.setState({errorMessage : message});
+        this.setState({errorMessage : message && message.toString()});
     }
 
     render(){

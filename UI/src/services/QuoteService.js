@@ -1,8 +1,10 @@
 //import Logger from './Logger.js';
 //import axios from 'axios';
 
+import Cookies from 'js-cookie';
+
 import { GetProfile } from "../services/ProfileService";
-import { GetCurrentAccountId } from '../services/AuthenticationService';
+//import { GetCurrentAccountId } from '../services/AuthenticationService';
 
 //stubbed data
 const quotes = {
@@ -11,7 +13,7 @@ const quotes = {
 };
 
 function CreateQuote(quoteRequest){
-    const accountId = GetCurrentAccountId();
+    const accountId = Cookies.get('auth');//temp
     
     if (!(accountId in quotes)){
         quotes[accountId] = [];
@@ -30,22 +32,22 @@ function GetQuotes(query){
     
     response.currentPage = query.currentPage || 1;
     response.pageSize = query.pageSize || 20;
-    const currentAccountId = GetCurrentAccountId();
+    const currentAccountId = Cookies.get('auth');//temp
     
-   if (!(currentAccountId in quotes)){
-       return Promise.reject("No quotes for account found.");
-   }
+  if (!(currentAccountId in quotes)){
+      return Promise.reject("No quotes for account found.");
+  }
    
-   return GetProfile()
+  return GetProfile()
             .then(profile => {
-               const {id, accountId, ...address} = profile
+              const {id, accountId, ...address} = profile
                
-               const newPage = quotes[currentAccountId].map(q => ({ ...q, totalAmount : q.suggestedPrice * q.gallonsRequested, deliveryAddress:  address }));
+              const newPage = quotes[currentAccountId].map(q => ({ ...q, totalAmount : q.suggestedPrice * q.gallonsRequested, deliveryAddress:  address }));
                
-               response.pageCount = 1;
-               response.page = newPage;
-               response.numberOfPages = newPage.length;  
-               return response;
+              response.pageCount = 1;
+              response.page = newPage;
+              response.numberOfPages = newPage.length;  
+              return response;
             });
 }
 
