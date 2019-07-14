@@ -4,14 +4,14 @@ var GetProfile = require("./ProfileRepo");
 const quotes = {
 };
 
-function CreateQuote(accountId, quoteRequest){
+function InsertQuote(accountId, quoteRequest){
     
     if (!(accountId in quotes)){
         quotes[accountId] = [];
     }
     
     const newId = "uuid_q_" + (quotes[accountId].length + 1).toString().padStart(4,"0");
-    const newQuote = {suggestedPrice : 100, ...quoteRequest, id: newId};
+    const newQuote = {...quoteRequest, id: newId};
     quotes[accountId].push(newQuote);
     
     return Promise.resolve(newQuote);
@@ -20,9 +20,6 @@ function CreateQuote(accountId, quoteRequest){
 function GetQuotes(currentAccountId, query){
     
     const {page, ...response} = query;
-    
-    response.currentPage = query.currentPage || 1;
-    response.pageSize = query.pageSize || 20;
     
    if (!(currentAccountId in quotes)){
        return Promise.reject("No quotes for account found.");
@@ -41,4 +38,4 @@ function GetQuotes(currentAccountId, query){
             });
 }
 
-module.exports = {CreateQuote, GetQuotes};
+module.exports = {InsertQuote, GetQuotes};

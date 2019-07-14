@@ -10,7 +10,7 @@ jest.mock('js-cookie', ()=> ({
     "remove" : jest.fn()
 }));
 
-describe("Register Component tests", ()=>{
+describe("AuthenticationService tests", ()=>{
 
     beforeEach(() => {
       // Clear all instances and calls to constructor and all methods:

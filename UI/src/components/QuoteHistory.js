@@ -24,7 +24,6 @@ class QuoteTable extends React.Component
         
         this.state = {
             page : [],
-            numberOfPages : 0,
             pageSize :  5,
             pageCount : 0,
             currentPage : 0
@@ -33,22 +32,23 @@ class QuoteTable extends React.Component
         this.promiseSetState = ThenableSetState(this);
     }
     
-    componentDidMount() {
-        GetQuotes({...this.state})
+    async componentDidMount() {
+        await GetQuotes({...this.state})
             .then(response=> this.promiseSetState(response));
     }
 
-    handleClick = (delta, gotoPage) => {
-         let newPage = gotoPage || this.state.currentPage + delta;
-        
-         if (newPage > this.state.pageCount || newPage < 1){
-             return;
-         }
+    handleClick = async (delta, gotoPage) => {
+         let newPage = gotoPage === undefined ? this.state.currentPage + delta : gotoPage;
         
         const newQuery = {...this.state};
+        
+         if (newPage > this.state.pageCount || newPage < 1){
+             return newQuery;
+         }
+        
         newQuery.currentPage = newPage;
         
-        return GetQuotes(newQuery)
+        return await GetQuotes(newQuery)
             .then(response=> this.promiseSetState(response));
     }
     
@@ -58,6 +58,11 @@ class QuoteTable extends React.Component
             <Link to="/NewQuote">Get a quote now!</Link>
         </div>
         );
+    
+    gotoFirst = () => this.handleClick(0,1);
+    gotoPrev = () => this.handleClick(-1);
+    gotoNext = () => this.handleClick(1);
+    gotoLast = () => this.handleClick(0,this.state.pageCount);
     
     renderTable = (page) => {
         
@@ -77,11 +82,11 @@ class QuoteTable extends React.Component
             <tfoot>
                 <tr><td>
                 <Pagination>
-                    <Pagination.First onClick={()=> this.handleClick(0,1)} />
-                    <Pagination.Prev onClick={()=> this.handleClick(-1)}/>
+                    <Pagination.First onClick={this.gotoFirst} />
+                    <Pagination.Prev onClick={this.gotoPrev}/>
                     <Pagination.Item active>{this.state.currentPage}</Pagination.Item>
-                    <Pagination.Next onClick={()=> this.handleClick(1)} />
-                    <Pagination.Last onClick={()=> this.handleClick(0,this.state.pageCount)} />
+                    <Pagination.Next onClick={this.gotoNext} />
+                    <Pagination.Last onClick={this.gotoLast} />
                 </Pagination>
                 </td></tr>
             </tfoot>
@@ -89,7 +94,7 @@ class QuoteTable extends React.Component
     }
     
     render(){
-        return this.state.numberOfPages ? this.renderTable(this.state.page) : this.renderNoHistory();
+        return this.state.page.length ? this.renderTable(this.state.page) : this.renderNoHistory();
     }
 }
 

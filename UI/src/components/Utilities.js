@@ -36,9 +36,9 @@ function ThenableSetState(thisObj, stateSetCallback){
     const func = function(updater){
         const t = this;
         return new Promise(resolve => {
-            t.setState(updater, (v)=> {
-                resolve(v);
-                stateSetCallback && stateSetCallback(v);
+            t.setState(updater, ()=> {
+                resolve(t.state);
+                stateSetCallback && stateSetCallback(t.state);
             });
         });
     }

@@ -1,9 +1,29 @@
 //Quote Module
-const { GetQuotes } = require("../repositories/QuoteRepo");
+const { GetQuotes, InsertQuote } = require("../repositories/QuoteRepo");
+const { PredictPrice } = require("./PricingModule");
 
-function GetQuoteHistory(accountId, query){
+async function GetQuoteHistory(accountId, query){
     //do additional work. For this example, just pass to the repo
-    return GetQuotes(accountId, query);
+    
+    const updatedQuery = {...query};
+    
+    //default some query params if not available
+    updatedQuery.currentPage = updatedQuery.currentPage || 1;
+    updatedQuery.pageSize = updatedQuery.pageSize || 20;
+    
+    const {page, count} = await GetQuotes(accountId, updatedQuery);
+    
+    return {...updatedQuery, page : page, pageCount: count};
 }
 
-module.exports = { GetQuoteHistory };
+async function CreateQuote(accountId, quoteRequest){
+    
+    const price = await PredictPrice(accountId, quoteRequest);
+    
+    const updatedRequest = {...quoteRequest};
+    updatedRequest.suggestedPrice = price;
+    
+    return await InsertQuote(accountId, updatedRequest);
+}
+
+module.exports = { GetQuoteHistory, CreateQuote };

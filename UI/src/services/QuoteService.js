@@ -1,54 +1,31 @@
-//import Logger from './Logger.js';
-//import axios from 'axios';
-
-import Cookies from 'js-cookie';
-
-import { GetProfile } from "../services/ProfileService";
-//import { GetCurrentAccountId } from '../services/AuthenticationService';
-
-//stubbed data
-const quotes = {
-  "uuid_a_0001": [],
-  "uuid_a_0002": []
-};
+import axios from 'axios';
 
 function CreateQuote(quoteRequest){
-    const accountId = Cookies.get('auth');//temp
     
-    if (!(accountId in quotes)){
-        quotes[accountId] = [];
-    }
-    
-    const newId = "uuid_q_" + (quotes[accountId].length + 1).toString().padStart(4,"0");
-    const newQuote = {suggestedPrice : 100, ...quoteRequest, id: newId};
-    quotes[accountId].push(newQuote);
-    
-    return Promise.resolve(newQuote);
+    return axios({
+        method : "POST",
+        url : "/api/Quote",
+        data : quoteRequest
+    }).then(response=> {
+        return response.data;
+    })
+    .catch(e => {
+       return Promise.reject(e.response.data); 
+    });
 }
 
 function GetQuotes(query){
     
-    const {page, ...response} = query;
-    
-    response.currentPage = query.currentPage || 1;
-    response.pageSize = query.pageSize || 20;
-    const currentAccountId = Cookies.get('auth');//temp
-    
-  if (!(currentAccountId in quotes)){
-      return Promise.reject("No quotes for account found.");
-  }
-   
-  return GetProfile()
-            .then(profile => {
-              const {id, accountId, ...address} = profile
-               
-              const newPage = quotes[currentAccountId].map(q => ({ ...q, totalAmount : q.suggestedPrice * q.gallonsRequested, deliveryAddress:  address }));
-               
-              response.pageCount = 1;
-              response.page = newPage;
-              response.numberOfPages = newPage.length;  
-              return response;
-            });
+    return axios({
+        method : "GET",
+        url : "/api/Quote",
+        data : query
+    }).then(response=> {
+        return response.data;
+    })
+    .catch(e => {
+       return Promise.reject(e.response.data); 
+    });
 }
 
 export {CreateQuote, GetQuotes};

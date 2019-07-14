@@ -1,4 +1,4 @@
-This project is split into two applications:
+This project is split into three applications:
 
 ### `UI`
 
@@ -17,6 +17,11 @@ src/tests - all unit tests go here
 This is the backend application. For assignement 2, it simply hosts the REACTjs
 application. It will for assignement 3 host the RESTfull api calls.
 All packages are maintained via npm.
+
+### `DB`
+
+This is the database application. It will define the schemas and run on it's own process and port.
+it will likely run a NoSql DB due to the simplicity of the application requirements, (MongoDB is installed here already);
 
 Notable folders:
 

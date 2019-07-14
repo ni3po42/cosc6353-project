@@ -106,19 +106,27 @@ describe("NewQuote Component tests", ()=>{
      it('can make setState thenable', async () => {
         //arrange
         const obj = {
-            setState : (updater, callback)=> {
-                callback && callback('test');
+            state : {
+                data : 'data'
             }
         }
         
+        obj.setState = (updater, callback)=> {
+                obj.state = {...obj.state, ...updater};
+                callback && callback();
+            };
+        const cb = jest.fn();
         //act
-        const setState = ThenableSetState(obj);
+        const setState = ThenableSetState(obj, cb);
         
         expect(setState).toBeDefined();
         
-        await setState({})
-            .then(val => expect(val).toBe('test'));
-        
+       const val = await setState({test:'test'});
+        expect(val).toMatchObject({
+            data : 'data',
+            test : 'test'
+        });
+        expect(cb).toHaveBeenCalled();
     });
     
 });
