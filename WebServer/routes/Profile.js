@@ -1,24 +1,45 @@
 const express = require('express');
 const router = express.Router();
 
+const { ValidateAll } = require("common/validations/core");
+const { Validations } = require("common/validations/profile");
+
 const Authenticate = require('../AuthMiddleware');
 
-//create profile manager, export the get and update methods; use them here
+const { GetProfile, CreateProfile } = require('../managers/ProfileManager');
 
 //Get profile
 router.get('/', Authenticate, function(req, res) {
-  //assume this is here, will be added via the auth middle ware
-  var accountId = req.accountId;  
   
-  res.send({message : "this is an example:" + accountId});
+  const accountId = req.accountId;
+  
+  GetProfile(accountId)
+    .then( profile=> res.send(profile))
+    .catch(e => {
+      res.status(500);
+      res.send(e);
+    });
 });
 
 //Update profile
 router.post('/', Authenticate, function(req, res) {
-  //assume this is here, will be added via the auth middle ware
-  var accountId = req.accountId;  
+  const errorMessages = ValidateAll(req.body, Validations);
   
-  res.send({message : "this is an example"});
+  if (errorMessages){
+    res.status(400);
+    res.send(errorMessages);
+    return;
+  }
+  
+  const accountId = req.accountId;
+  const profile = req.body;
+  
+  CreateProfile(accountId, profile)
+    .then(updatedProfile=> res.send(updatedProfile))
+    .catch(e => {
+      res.status(500);
+      res.send(e);
+    });
 });
 
 

@@ -44,16 +44,16 @@ describe("Authmiddleware tests", ()=>{
         //assert
         expect(ValidateToken).toBeCalledWith(token);
         expect(req.accountId).toBe(accountId);
-        expect(CreateToken).toBeCalledWith(accountId);
+        //expect(CreateToken).toBeCalledWith(accountId);
         
         expect(res.send).not.toHaveBeenCalled();
         expect(res.status).not.toHaveBeenCalled();
         
-        expect(res.clearCookie).toBeCalledWith("auth");
-        expect(res.cookie).toHaveBeenCalled();
-        expect(res.cookie.mock.calls[0][0]).toBe("auth");
-        expect(res.cookie.mock.calls[0][1]).toBe(newToken);
-        expect(res.cookie.mock.calls[0][2]).toMatchObject({ maxAge: 10 * 60 * 1000, httpOnly: true });
+        //expect(res.clearCookie).toBeCalledWith("auth");
+        //expect(res.cookie).toHaveBeenCalled();
+        //expect(res.cookie.mock.calls[0][0]).toBe("auth");
+        //expect(res.cookie.mock.calls[0][1]).toBe(newToken);
+        //expect(res.cookie.mock.calls[0][2]).toMatchObject({ maxAge: 10 * 60 * 1000, httpOnly: true });
         
         expect(next).toHaveBeenCalled();
     });

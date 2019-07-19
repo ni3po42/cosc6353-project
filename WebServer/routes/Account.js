@@ -51,7 +51,8 @@ router.post('/Token', function(req, res) {
   LogIn(email, password)
     .then(account => CreateToken(account.id))
     .then(token=> {
-        res.cookie('auth',token, { maxAge: 10 * 60 * 1000, httpOnly: true });
+        res.cookie('auth', token, { maxAge: 10 * 60 * 1000, httpOnly: true });
+        res.cookie('active', 1, { maxAge: 10 * 60 * 1000, httpOnly: false });
         res.send({});
       })
     .catch(errorMessage=> {
@@ -65,6 +66,7 @@ router.post('/Token', function(req, res) {
 //log out
 router.delete('/Token', function(req, res) {
   res.clearCookie('auth');
+  res.clearCookie('active');
   res.send({});
 });
 

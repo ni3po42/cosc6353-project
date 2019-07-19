@@ -31,8 +31,8 @@ function CreateToken(accountId){
     });
     let encrypted = cipher.update(payLoad, 'utf8', 'hex');
     encrypted += cipher.final('hex');
-    
-    return Promise.resolve(Buffer.from(encrypted).toString('base64'));
+    const t = Buffer.from(encrypted).toString('base64');
+    return Promise.resolve(t);
 }
 
 function ValidateToken(token){

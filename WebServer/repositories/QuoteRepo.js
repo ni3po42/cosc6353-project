@@ -1,4 +1,4 @@
-var GetProfile = require("./ProfileRepo");
+var profileRepo = require("./ProfileRepo");
 
 //stubbed data
 const quotes = {
@@ -25,7 +25,7 @@ function GetQuotes(currentAccountId, query){
        return Promise.reject("No quotes for account found.");
    }
    
-   return GetProfile(currentAccountId)
+   return profileRepo.GetProfile(currentAccountId)
             .then(profile => {
                const {id, accountId, ...address} = profile
                

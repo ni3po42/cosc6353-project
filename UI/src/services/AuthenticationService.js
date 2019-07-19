@@ -20,7 +20,6 @@ function Authenticate(email, password){
         data: {email, password}
     })
     .then(response=> {
-        Cookies.set('active', '1');
         listeners.forEach(callback => callback(true));
         return response.data
     })
@@ -71,7 +70,6 @@ function LogOff(){
         url: "/api/Account/Token"
     })
     .then(()=> {
-        Cookies.remove('active');
         listeners.forEach(callback => callback(false));
     });
     

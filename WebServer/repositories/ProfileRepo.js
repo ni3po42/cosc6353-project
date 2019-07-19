@@ -6,6 +6,7 @@ const hashTable = {
 };
 
 function GetProfile(accountId){
+    
     const profileId = hashTable[accountId];
     
     if (!profileId){

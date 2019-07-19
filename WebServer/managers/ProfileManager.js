@@ -1,2 +1,12 @@
-//create a get and update profile methods for this module. they should call 
-//imported method calls from the ProfileRep already stubbed
+//Profile Module
+const repo = require("../repositories/ProfileRepo");
+
+async function GetProfile(accountId){
+    return await repo.GetProfile(accountId);
+}
+
+async function CreateProfile(accountId, profile){
+    return await repo.UpdateProfile(accountId, profile);
+}
+
+module.exports = { GetProfile, CreateProfile };
