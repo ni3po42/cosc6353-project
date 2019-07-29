@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www 31415 http",
-    "startprod": "node ./bin/www 443 https ../../../ssl"
+    "startprod": "node ./bin/www 443 https ../../../ssl",
     "test": "jest --coverage --watch",
     "testone": "jest --coverage"
   },
