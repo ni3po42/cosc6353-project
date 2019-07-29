@@ -4,22 +4,38 @@
  * Module dependencies.
  */
 
+var args = process.argv.slice(2)
+
 var app = require('../app');
 var debug = require('debug')('webserver:server');
 var http = require('http');
+var https = require('https');
+var fs = require('fs');
+const path = require('path');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = 31415;// normalizePort(process.env.PORT || '3000');
+var port = +args[0] || 31415;
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = null;
+if (args[1] === "http"){
+  server = http.createServer(app);  
+} else if (args[1] === "https"){
+  var folder = args[2];
+ server = https.createServer({
+            key: fs.readFileSync(path.join(__dirname, folder, 'server.key')),
+            cert: fs.readFileSync(path.join(__dirname, folder, 'server.crt'))
+          }, app); 
+}
+
+
 
 /**
  * Listen on provided port, on all network interfaces.
