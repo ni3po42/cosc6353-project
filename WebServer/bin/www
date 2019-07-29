@@ -31,7 +31,12 @@ if (args[1] === "http"){
   var folder = args[2];
  server = https.createServer({
             key: fs.readFileSync(path.join(__dirname, folder, 'server.key')),
-            cert: fs.readFileSync(path.join(__dirname, folder, 'server.crt'))
+            cert: fs.readFileSync(path.join(__dirname, folder, 'server.crt')),
+            ca: [
+              fs.readFileSync(path.join(__dirname, folder, 'gd_bundle-1.crt')),
+              fs.readFileSync(path.join(__dirname, folder, 'gd_bundle-2.crt')),
+              fs.readFileSync(path.join(__dirname, folder, 'gd_bundle-3.crt'))
+              ]
           }, app); 
 }
 
