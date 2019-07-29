@@ -14,12 +14,12 @@ function CreateQuote(quoteRequest){
     });
 }
 
-function GetQuotes(query){
+function GetPrice(quoteRequest){
     
     return axios({
-        method : "GET",
-        url : "/api/Quote",
-        data : query
+        method : "POST",
+        url : "/api/Quote/NewPrice",
+        data : quoteRequest
     }).then(response=> {
         return response.data;
     })
@@ -28,4 +28,18 @@ function GetQuotes(query){
     });
 }
 
-export {CreateQuote, GetQuotes};
+function GetQuotes(query){
+    
+    return axios({
+        method : "GET",
+        url : "/api/Quote",
+        params : query
+    }).then(response=> {
+        return response.data;
+    })
+    .catch(e => {
+       return Promise.reject(e.response.data); 
+    });
+}
+
+export {CreateQuote, GetQuotes, GetPrice};

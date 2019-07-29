@@ -98,8 +98,7 @@ describe("AuthenticationService tests", ()=>{
             method:'DELETE',
             url: "/api/Account/Token"
         });
-        expect(Cookies.remove).toHaveBeenCalledWith("active");
-        
+    
         expect(listener).toHaveBeenCalledWith(false);
         UnregisterListener(listener);
     });

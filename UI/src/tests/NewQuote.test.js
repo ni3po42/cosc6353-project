@@ -7,13 +7,13 @@ import { withRouter } from 'react-router';
 
 import { NewQuote } from '../components/NewQuote';
 
-import { CreateQuote} from "../services/QuoteService";
+import { CreateQuote, GetPrice} from "../services/QuoteService";
 import { GetProfile} from "../services/ProfileService";
 
 import { ValidateAll } from "common/validations/core";
 import { Validations } from "common/validations/quoteRequest";
 
-jest.mock('../services/QuoteService.js', () => ({CreateQuote: jest.fn()}));
+jest.mock('../services/QuoteService.js', () => ({CreateQuote: jest.fn(), GetPrice: jest.fn()}));
 jest.mock('../services/ProfileService.js', () => ({GetProfile: jest.fn()}));
 
 jest.mock("common/validations/core", () => ({ValidateAll: jest.fn()}));
@@ -88,7 +88,7 @@ describe("NewQuote Component tests", ()=>{
         component.update();
         await profileAwait();
         
-        instance.handleSubmit({preventDefault : jest.fn()});
+        instance.handleSubmit({preventDefault : jest.fn(), target : { name:"submitQuote"}});
         
         //assert
         expect(ValidateAll).toHaveBeenCalled();
@@ -153,7 +153,7 @@ describe("NewQuote Component tests", ()=>{
         component.setState(request);
         
         //act
-        instance.handleSubmit({preventDefault : jest.fn()});
+        instance.handleSubmit({preventDefault : jest.fn(), target : { name:"submitQuote"}});
         await quoteAwait();
         
         //assert
@@ -161,6 +161,34 @@ describe("NewQuote Component tests", ()=>{
         expect(CreateQuote.mock.calls[0][0]).toMatchObject(request);
         
     });
+    
+    it('can get price', async ()=>{
+        //arange
+        const address = {address1 : "1", address2: "2", city: "3", state:"TX", zip:"77001"};
+        const profileAwait = GetProfile.mockResolvedValue(address);
+        
+        const priceAwait = GetPrice.mockResolvedValue({suggestedPrice: 1234});
+        
+        const component = createComp({ });
+        const instance = component.instance();
+        
+        ValidateAll.mockReturnValue(undefined);
+        
+        component.update();
+        await profileAwait();
+        const request = {gallonsRequested : 20, deliveryDate: "2019-3-31"};
+        component.setState(request);
+        
+        //act
+        instance.handleSubmit({preventDefault : jest.fn(), target : { name:"getPrice"}});
+        await priceAwait();
+        
+        //assert
+        expect(GetPrice).toHaveBeenCalled();
+        expect(GetPrice.mock.calls[0][0]).toMatchObject(request);
+        
+    });
+    
 });
 
 

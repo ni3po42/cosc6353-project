@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { Address } from "./Address";
 
-import { CreateQuote} from "../services/QuoteService";
+import { CreateQuote, GetPrice} from "../services/QuoteService";
 import { GetProfile} from "../services/ProfileService";
 
 import { ValidateAll } from "common/validations/core";
@@ -27,6 +27,7 @@ export class NewQuote extends React.Component {
                 zip : ""
             }, 
             deliveryDate: "",
+            id : null,
             suggestedPrice: null
         };
         
@@ -53,16 +54,25 @@ export class NewQuote extends React.Component {
     
     handleSubmit = e => {
         e.preventDefault();
+        const { name } = e.target;
         var errorMessages = ValidateAll(this.state, Validations);
         if (errorMessages) {
             this.setState({formErrors : errorMessages});
             
         } else {
             const {gallonsRequested, deliveryDate} = this.state;
-            CreateQuote({gallonsRequested, deliveryDate})
-                .then((quote) => this.setState({suggestedPrice : quote.suggestedPrice}));
+            
+            if (name === "getPrice"){
+                GetPrice({gallonsRequested, deliveryDate})
+                    .then((quote) => this.setState({suggestedPrice : quote.suggestedPrice}));
+            }else if (name === "submitQuote"){
+                CreateQuote({gallonsRequested, deliveryDate})
+                    .then((quote) => this.setState({id : quote.id}));
+            }
         }
     };
+    
+    
       
     handleChange = e => {
         e.preventDefault();
@@ -76,8 +86,14 @@ export class NewQuote extends React.Component {
             delete formErrors[name];
         }
         
-        this.setState({ formErrors, [name]: value, suggestedPrice: null });
+        this.setState({ formErrors, [name]: value, suggestedPrice: null, id:null });
     };
+    
+    renderSuccess = () => {
+        if (this.state.id){
+            return <span>Quote Submitted!</span>        
+        }
+    }
     
     renderSuggestedPrice = () =>
         this.state.suggestedPrice && (
@@ -101,6 +117,7 @@ export class NewQuote extends React.Component {
     
     render(){
         const { formErrors } = this.state;
+        const submitDisabled = this.state.suggestedPrice === null;
         return (
             <div className="Wrapper">
                 <div className="form-wrapper">
@@ -137,12 +154,16 @@ export class NewQuote extends React.Component {
                             {this.renderErrorMessage(formErrors.deliveryDate)}
                         </div>
                         
-                         <div>
-                            <button type="submit">Get Quote</button>
-                         </div>
-                         <hr />
+                        <hr />
                         
                         {this.renderSuggestedPrice()}
+                        
+                         <div>
+                            <button name="getPrice" disabled={!submitDisabled} onClick={this.handleSubmit}>Get Price</button>
+                            <button name="submitQuote" disabled={submitDisabled} onClick={this.handleSubmit}>Submit Quote</button>
+                            {this.renderSuccess()}
+                         </div>
+                         
                     </form>
                     
                     <div>

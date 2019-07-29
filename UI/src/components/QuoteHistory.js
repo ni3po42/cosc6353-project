@@ -26,21 +26,21 @@ class QuoteTable extends React.Component
             page : [],
             pageSize :  5,
             pageCount : 0,
-            currentPage : 0
+            currentPage : 1
         };
         
         this.promiseSetState = ThenableSetState(this);
     }
     
     async componentDidMount() {
-        await GetQuotes({...this.state})
+        await GetQuotes({pageSize : this.state.pageSize, currentPage : this.state.currentPage})
             .then(response=> this.promiseSetState(response));
     }
 
     handleClick = async (delta, gotoPage) => {
          let newPage = gotoPage === undefined ? this.state.currentPage + delta : gotoPage;
         
-        const newQuery = {...this.state};
+        const newQuery = {pageSize : this.state.pageSize, currentPage : this.state.currentPage};
         
          if (newPage > this.state.pageCount || newPage < 1){
              return newQuery;

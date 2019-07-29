@@ -17,6 +17,14 @@ function InsertQuote(accountId, quoteRequest){
     return Promise.resolve(newQuote);
 }
 
+function GetQuoteCount(accountId){
+    if (!(accountId in quotes)){
+       return Promise.resolve(0);
+    }
+    
+    return Promise.resolve(quotes[accountId].length);
+}
+
 function GetQuotes(currentAccountId, query){
     
     const {page, ...response} = query;
@@ -29,13 +37,14 @@ function GetQuotes(currentAccountId, query){
             .then(profile => {
                const {id, accountId, ...address} = profile
                
-               const newPage = quotes[currentAccountId].map(q => ({ ...q, totalAmount : q.suggestedPrice * q.gallonsRequested, deliveryAddress:  address }));
+               const allQuotes = quotes[currentAccountId].map(q => ({ ...q, totalAmount : q.suggestedPrice * q.gallonsRequested, deliveryAddress:  address }));
                
-               response.pageCount = 1;
-               response.page = newPage;
-               response.numberOfPages = newPage.length;  
+               response.pageCount = Math.ceil(allQuotes.length / query.pageSize);
+               const startIndex = (query.currentPage - 1) * query.pageSize;
+               const endIndex = query.currentPage * query.pageSize;
+               response.page = allQuotes.slice(startIndex, endIndex);
                return response;
             });
 }
 
-module.exports = {InsertQuote, GetQuotes};
+module.exports = {InsertQuote, GetQuotes, GetQuoteCount};

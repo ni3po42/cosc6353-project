@@ -11,9 +11,7 @@ async function GetQuoteHistory(accountId, query){
     updatedQuery.currentPage = updatedQuery.currentPage || 1;
     updatedQuery.pageSize = updatedQuery.pageSize || 20;
     
-    const {page, count} = await GetQuotes(accountId, updatedQuery);
-    
-    return {...updatedQuery, page : page, pageCount: count};
+    return await GetQuotes(accountId, updatedQuery);
 }
 
 async function CreateQuote(accountId, quoteRequest){

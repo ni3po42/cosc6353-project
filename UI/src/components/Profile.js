@@ -51,7 +51,8 @@ export class Profile extends React.Component {
         if (errorMessages) {
             this.setState({formErrors : errorMessages});
         } else {
-            await UpdateProfile(this.state)
+            const {fullName, address1, address2, city, state, zip} = this.state;
+            await UpdateProfile({fullName, address1, address2, city, state, zip})
                 .then(()=> {
                     this.setState({profileDirty : false, updated : true});
                 })

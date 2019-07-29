@@ -6,13 +6,15 @@ const { Validations } = require("common/validations/quoteRequest");
 
 const Authenticate = require('../AuthMiddleware');
 const { GetQuoteHistory, CreateQuote } = require('../managers/QuoteManager');
+const { PredictPrice } = require('../managers/PricingModule');
+
 
 router.get('/', Authenticate, function(req, res) {
   
   const accountId = req.accountId;
-  const query = req.body;
+  const query = req.query;
   
-  GetQuoteHistory(accountId, query)
+  GetQuoteHistory(accountId, {pageSize : +query.pageSize, currentPage : +query.currentPage})
     .then(quotes=> res.send(quotes))
     .catch(e => {
       res.status(500);
@@ -41,5 +43,26 @@ router.post('/', Authenticate, function(req, res) {
     });
 });
 
+
+router.post('/NewPrice', Authenticate, function(req, res) {
+  
+  const errorMessages = ValidateAll(req.body, Validations);
+  
+  if (errorMessages){
+    res.status(400);
+    res.send(errorMessages);
+    return;
+  }
+  
+  const accountId = req.accountId;
+  const quoteRequest = req.body;
+  
+  PredictPrice(accountId, quoteRequest)
+    .then(price=> res.send({suggestedPrice : price}))
+    .catch(e => {
+      res.status(500);
+      res.send(e);
+    });
+});
 
 module.exports = router;

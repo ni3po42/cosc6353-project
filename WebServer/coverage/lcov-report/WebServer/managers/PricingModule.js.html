@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for WebServer/managers/QuoteManager.js</title>
+    <title>Code coverage report for WebServer/managers/PricingModule.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -16,28 +16,28 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="../../index.html">All files</a> / <a href="index.html">WebServer/managers</a> QuoteManager.js
+      <a href="../../index.html">All files</a> / <a href="index.html">WebServer/managers</a> PricingModule.js
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>12/12</span>
+        <span class='fraction'>22/22</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>4/4</span>
+        <span class='fraction'>8/8</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>2/2</span>
+        <span class='fraction'>1/1</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>12/12</span>
+        <span class='fraction'>22/22</span>
       </div>
     </div>
     <p class="quiet">
@@ -74,63 +74,75 @@
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">//Quote Module
-const { GetQuotes, InsertQuote } = require("../repositories/QuoteRepo");
-const { PredictPrice } = require("./PricingModule");
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">const quoteRepo = require("../repositories/QuoteRepo");
+const profileRepo = require("../repositories/ProfileRepo");
 &nbsp;
-async function GetQuoteHistory(accountId, query){
-    //do additional work. For this example, just pass to the repo
+const currentPricePerGallon = 1.5;
+const inStateLoadFactor = .02;
+const outStateLoadFactor = .04;
+const newClientHistoryFactor = .0;
+const existingClientHistoryFactor = .01;
+&nbsp;
+const smallDeliveryFactor = .03;
+const largeDeliveryFactor = .02;
+&nbsp;
+const companyProfitFactor = .1;
+const summerRateFactor = .04;
+const nonSummerRateFactor = .03;
+&nbsp;
+const summerMonths = [6,7,8];
+&nbsp;
+async function PredictPrice(accountId, quoteRequest){
     
-    const updatedQuery = {...query};
+    const quoteCount = await quoteRepo.GetQuoteCount(accountId);
+    const profile = await profileRepo.GetProfile(accountId);
     
-    //default some query params if not available
-    updatedQuery.currentPage = updatedQuery.currentPage || 1;
-    updatedQuery.pageSize = updatedQuery.pageSize || 20;
+    const locationFactor = profile.state === "TX" ? inStateLoadFactor : outStateLoadFactor;
+    const rateHistoryFactor = quoteCount === 0 ? newClientHistoryFactor : existingClientHistoryFactor;
+    const gallonsRequestedFactor = quoteRequest.gallonsRequested &gt; 1000 ? largeDeliveryFactor : smallDeliveryFactor;
+    const rateFluctuationFactor = summerMonths.indexOf(new Date(quoteRequest.deliveryDate).getMonth() + 1) &gt;= 0 ? summerRateFactor : nonSummerRateFactor;
+    const margin = currentPricePerGallon * (locationFactor - rateHistoryFactor + gallonsRequestedFactor + companyProfitFactor + rateFluctuationFactor);
     
-    const {page, count} = await GetQuotes(accountId, updatedQuery);
-    
-    return {...updatedQuery, page : page, pageCount: count};
+    return currentPricePerGallon + margin;
 }
 &nbsp;
-async function CreateQuote(accountId, quoteRequest){
-    
-    const price = await PredictPrice(accountId, quoteRequest);
-    
-    const updatedRequest = {...quoteRequest};
-    updatedRequest.suggestedPrice = price;
-    
-    return await InsertQuote(accountId, updatedRequest);
-}
-&nbsp;
-module.exports = { GetQuoteHistory, CreateQuote };</pre></td></tr>
+module.exports = {PredictPrice};</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
