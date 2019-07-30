@@ -1,5 +1,6 @@
 const quoteRepo = require("../repositories/QuoteRepo");
 const profileRepo = require("../repositories/ProfileRepo");
+const mathUtil = require("common/math");
 
 const currentPricePerGallon = 1.5;
 const inStateLoadFactor = .02;
@@ -27,7 +28,7 @@ async function PredictPrice(accountId, quoteRequest){
     const rateFluctuationFactor = summerMonths.indexOf(new Date(quoteRequest.deliveryDate).getMonth() + 1) >= 0 ? summerRateFactor : nonSummerRateFactor;
     const margin = currentPricePerGallon * (locationFactor - rateHistoryFactor + gallonsRequestedFactor + companyProfitFactor + rateFluctuationFactor);
     
-    return currentPricePerGallon + margin;
+    return mathUtil.round(currentPricePerGallon + margin, 2);
 }
 
 module.exports = {PredictPrice};

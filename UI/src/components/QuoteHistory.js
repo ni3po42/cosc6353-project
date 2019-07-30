@@ -15,8 +15,8 @@ class QuoteTable extends React.Component
         {field:"gallonsRequested", display:"Gallons Requested", render: val => (<span>{val}</span>)}, 
         {field:"deliveryAddress", display:"Delivery Address", render: val => (<Address {...val} />)},
         {field:"deliveryDate", display:"Delivery Date", render : val => (<span>{val}</span>)},
-        {field:"suggestedPrice", display:"Suggested Price", render : val => (<span>${val}</span>)},
-        {field:"totalAmount", display:"Total Amount Due", render : val => (<span>${val}</span>)}
+        {field:"suggestedPrice", display:"Suggested Price", render : val => (<span>${Number(val).toFixed(2)} / gal</span>)},
+        {field:"totalAmount", display:"Total Amount Due", render : val => (<span>${Number(val).toFixed(2)}</span>)}
         ];
     
     constructor(props){

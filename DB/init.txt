@@ -1,0 +1,5 @@
+use admin
+db.createUser({ user: "admin", pwd: "gutent@g!", roles: [{ role: "userAdminAnyDatabase", db: "admin" }] })
+use fuelstock
+db.createUser({ user: "dbUser", pwd: "W!llK0mmen!", roles: [{ role: "dbOwner", db: "fuelstock" }] })
+exit

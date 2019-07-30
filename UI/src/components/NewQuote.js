@@ -99,10 +99,10 @@ export class NewQuote extends React.Component {
         this.state.suggestedPrice && (
             <React.Fragment>
                 <div className="formField wide">
-                    <span>Suggested Price: ${this.state.suggestedPrice}</span>
+                    <span>Suggested Price: ${Number(this.state.suggestedPrice).toFixed(2)} / gal</span>
                 </div>
                  <div className="formField wide">
-                    <span>Total Amount Due: ${this.state.suggestedPrice * this.state.gallonsRequested}</span>
+                    <span>Total Amount Due: ${Number(this.state.suggestedPrice * this.state.gallonsRequested).toFixed(2)}</span>
                 </div>
             </React.Fragment>
         );
@@ -117,7 +117,8 @@ export class NewQuote extends React.Component {
     
     render(){
         const { formErrors } = this.state;
-        const submitDisabled = this.state.suggestedPrice === null;
+        const submitDisabled = this.state.suggestedPrice === null || this.state.id !== null;
+        const getPriceDisabled = this.state.suggestedPrice !== null;
         return (
             <div className="Wrapper">
                 <div className="form-wrapper">
@@ -159,7 +160,7 @@ export class NewQuote extends React.Component {
                         {this.renderSuggestedPrice()}
                         
                          <div>
-                            <button name="getPrice" disabled={!submitDisabled} onClick={this.handleSubmit}>Get Price</button>
+                            <button name="getPrice" disabled={getPriceDisabled} onClick={this.handleSubmit}>Get Price</button>
                             <button name="submitQuote" disabled={submitDisabled} onClick={this.handleSubmit}>Submit Quote</button>
                             {this.renderSuccess()}
                          </div>
