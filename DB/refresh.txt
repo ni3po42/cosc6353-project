@@ -1,5 +1,6 @@
 use fuelstock
 db.dropDatabase()
+db.dropUser("dbUser")
 use fuelstock
 db.createUser({ user: "dbUser", pwd: "W!llK0mmen!", roles: [{ role: "dbOwner", db: "fuelstock" }] })
 db.createCollection("accounts", { autoIndexId : true })

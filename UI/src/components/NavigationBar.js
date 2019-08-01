@@ -44,12 +44,10 @@ export class NavigationBar extends React.Component {
         return (
         <Navbar expand= "lg">
             <WithRouter to="/"><Navbar.Brand>FUELSTOCK.COM</Navbar.Brand></WithRouter>
-            <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="ml-auto">
+            <Nav className="ml-auto">
                     <Nav.Item><WithRouter to="/" ><Nav.Link>Home</Nav.Link></WithRouter></Nav.Item>
                     {links}
                 </Nav>
-            </Navbar.Collapse> 
         </Navbar> 
         );
     }
