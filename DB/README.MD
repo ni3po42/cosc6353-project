@@ -25,3 +25,5 @@ sudo service mongod restart
 or use interactive:
 mongo
 
+also, for auth use:
+mongo --port 27017 -u 'user' -p 'password' --authenticationDatabase databasename

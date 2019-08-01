@@ -27,7 +27,7 @@ export class NewQuote extends React.Component {
                 zip : ""
             }, 
             deliveryDate: "",
-            id : null,
+            created : null,
             suggestedPrice: null
         };
         
@@ -67,7 +67,7 @@ export class NewQuote extends React.Component {
                     .then((quote) => this.setState({suggestedPrice : quote.suggestedPrice}));
             }else if (name === "submitQuote"){
                 CreateQuote({gallonsRequested, deliveryDate})
-                    .then((quote) => this.setState({id : quote.id}));
+                    .then((quote) => this.setState({created : quote.created}));
             }
         }
     };
@@ -86,11 +86,11 @@ export class NewQuote extends React.Component {
             delete formErrors[name];
         }
         
-        this.setState({ formErrors, [name]: value, suggestedPrice: null, id:null });
+        this.setState({ formErrors, [name]: value, suggestedPrice: null, created:null });
     };
     
     renderSuccess = () => {
-        if (this.state.id){
+        if (this.state.created){
             return <span>Quote Submitted!</span>        
         }
     }
@@ -117,7 +117,7 @@ export class NewQuote extends React.Component {
     
     render(){
         const { formErrors } = this.state;
-        const submitDisabled = this.state.suggestedPrice === null || this.state.id !== null;
+        const submitDisabled = this.state.suggestedPrice === null || this.state.created !== null;
         const getPriceDisabled = this.state.suggestedPrice !== null;
         return (
             <div className="Wrapper">

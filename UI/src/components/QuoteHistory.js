@@ -11,7 +11,7 @@ import { ThenableSetState } from "./Utilities";
 class QuoteTable extends React.Component
 {
     static Headers = [
-        {field:"id", display:"Quote Id", render: val => (<span>{val}</span>)}, 
+        {field:"created", display:"Quote Date", render: val => (<span>{val}</span>)}, 
         {field:"gallonsRequested", display:"Gallons Requested", render: val => (<span>{val}</span>)}, 
         {field:"deliveryAddress", display:"Delivery Address", render: val => (<Address {...val} />)},
         {field:"deliveryDate", display:"Delivery Date", render : val => (<span>{val}</span>)},
@@ -74,8 +74,8 @@ class QuoteTable extends React.Component
             </thead>
             <tbody>
                 {page.map(quote=> (
-                    <tr key={quote.id}>
-                        {QuoteTable.Headers.map(h=> (<td key={quote.id +"_"+ h.field}>{h.render(quote[h.field])}</td>))}
+                    <tr key={quote.created}>
+                        {QuoteTable.Headers.map(h=> (<td key={quote.created +"_"+ h.field}>{h.render(quote[h.field])}</td>))}
                     </tr>
                 ))}
             </tbody>

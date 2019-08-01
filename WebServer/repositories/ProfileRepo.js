@@ -1,42 +1,20 @@
-//stubbed data
-const profiles = {
-};
-
-const hashTable = {
-};
+const {FindOne, Update, ObjectID} = require("./dbHelper.js");
 
 function GetProfile(accountId){
     
-    const profileId = hashTable[accountId];
-    
-    if (!profileId){
-        return Promise.reject("Profile not found for account.");
-    }
-    else if (profileId in profiles){
-        return Promise.resolve(profiles[profileId]);
-    }else{
-        return Promise.reject("Profile not found");
-    }
+    return FindOne({_id:ObjectID(accountId)})
+        .then(account=>{
+            if (!account || !account.profile){
+                throw "Profile not found for account.";
+            }
+            return account.profile;
+        });
 }
 
 function UpdateProfile(accountId, profile){
-    
-    if (!(accountId in hashTable)){//new account
-        
-        const newId = "uuid" + (Object.keys(profiles).length + 1).toString().padStart(4,"0");
-        profile.id = newId;
-        profile.accountId = accountId;
-        profiles[newId] = profile;
-        hashTable[accountId] = newId;
-        
-        return Promise.resolve(profile);
-        
-    }else{
-        const profileId = hashTable[accountId];
-        profile.id = profileId;
-        profiles[profile.id] = profile;
-        return Promise.resolve(profile);
-    }
+    console.log(profile);
+    return Update({_id: ObjectID(accountId)},{$set:{profile : profile}})
+            .then(account=> account.profile);
 }
 
 module.exports = {GetProfile, UpdateProfile};
