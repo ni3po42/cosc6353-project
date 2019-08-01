@@ -2,6 +2,8 @@
 const { GetQuotes, InsertQuote } = require("../repositories/QuoteRepo");
 const { PredictPrice } = require("./PricingModule");
 
+const {GetProfile} = require("../repositories/ProfileRepo");
+
 async function GetQuoteHistory(accountId, query){
     //do additional work. For this example, just pass to the repo
     
@@ -16,10 +18,16 @@ async function GetQuoteHistory(accountId, query){
 
 async function CreateQuote(accountId, quoteRequest){
     
+    const profile = await GetProfile(accountId);
     const price = await PredictPrice(accountId, quoteRequest);
     
     const updatedRequest = {...quoteRequest};
+    delete profile.fullName;
+    
     updatedRequest.suggestedPrice = price;
+    updatedRequest.deliveryAddress = profile;
+    
+    console.log(updatedRequest);
     
     return await InsertQuote(accountId, updatedRequest);
 }

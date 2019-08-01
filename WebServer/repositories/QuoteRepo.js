@@ -34,7 +34,7 @@ function GetQuotes(currentAccountId, query){
                 }
                 
                 if (account.quotes && account.quotes.length){
-                    const page = account.quotes.map(q => ({ ...q, totalAmount : q.suggestedPrice * q.gallonsRequested, deliveryAddress:  account.profile }));
+                    const page = account.quotes.map(q => ({ ...q, totalAmount : q.suggestedPrice * q.gallonsRequested, deliveryAddress: q.deliveryAddress }));
                    
                    response.pageCount = Math.ceil(account.quoteCount / query.pageSize);
                    response.page = page;
