@@ -1,6 +1,7 @@
 import {PredictPrice} from "../managers/PricingModule"
 import {GetQuoteCount} from "../repositories/QuoteRepo";
 import {GetProfile} from "../repositories/ProfileRepo";
+const mathUtil = require("common/math");
 
 jest.mock("../repositories/QuoteRepo" , ()=>({
     GetQuoteCount : jest.fn()
@@ -18,8 +19,7 @@ describe("PricingModule tests", ()=>{
     
     function getExpectedPrice(){
         var margin = factors.currentPrice * (factors.location - factors.rateHistory + factors.gallonsRequested + factors.companyProfit + factors.rateFluctuation);
-        return factors.currentPrice + margin;
-        
+        return mathUtil.round(factors.currentPrice + margin, 2);
     };
     
     beforeEach(() => {

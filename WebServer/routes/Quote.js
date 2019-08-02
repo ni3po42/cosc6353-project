@@ -22,7 +22,7 @@ router.get('/', Authenticate, function(req, res) {
     });
 });
 
-router.post('/', Authenticate, function(req, res) {
+router.post('/', Authenticate, async function(req, res) {
   
   const errorMessages = ValidateAll(req.body, Validations);
   
@@ -35,7 +35,7 @@ router.post('/', Authenticate, function(req, res) {
   const accountId = req.accountId;
   const quoteRequest = req.body;
   
-  CreateQuote(accountId, quoteRequest)
+  await CreateQuote(accountId, quoteRequest)
     .then(quote=> res.send(quote))
     .catch(e => {
       res.status(500);

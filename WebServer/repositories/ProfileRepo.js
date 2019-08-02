@@ -12,7 +12,7 @@ function GetProfile(accountId){
 }
 
 function UpdateProfile(accountId, profile){
-    console.log(profile);
+
     return Update({_id: ObjectID(accountId)},{$set:{profile : profile}})
             .then(account=> account.profile);
 }

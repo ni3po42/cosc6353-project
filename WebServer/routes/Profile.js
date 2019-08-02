@@ -9,11 +9,11 @@ const Authenticate = require('../AuthMiddleware');
 const { GetProfile, CreateProfile } = require('../managers/ProfileManager');
 
 //Get profile
-router.get('/', Authenticate, function(req, res) {
+router.get('/', Authenticate, async function(req, res) {
   
   const accountId = req.accountId;
   
-  GetProfile(accountId)
+  await GetProfile(accountId)
     .then( profile=> res.send(profile))
     .catch(e => {
       res.status(500);
@@ -22,7 +22,7 @@ router.get('/', Authenticate, function(req, res) {
 });
 
 //Update profile
-router.post('/', Authenticate, function(req, res) {
+router.post('/', Authenticate, async function(req, res) {
   const errorMessages = ValidateAll(req.body, Validations);
   
   if (errorMessages){
@@ -34,7 +34,7 @@ router.post('/', Authenticate, function(req, res) {
   const accountId = req.accountId;
   const profile = req.body;
   
-  CreateProfile(accountId, profile)
+  await CreateProfile(accountId, profile)
     .then(updatedProfile=> res.send(updatedProfile))
     .catch(e => {
       res.status(500);

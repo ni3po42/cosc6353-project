@@ -6,10 +6,10 @@ const { Validations } = require("common/validations/register");
 const { GetAccount, CreateAccount, LogIn, CreateToken} = require('../managers/AccountManager');
 
 //get account
-router.get('/', Authenticate, function(req, res) {
+router.get('/', Authenticate, async function(req, res) {
   const accountId = req.accountId;
   
-  GetAccount(accountId)
+  await GetAccount(accountId)
     .then((account)=> {
       res.send(account);  
     })
@@ -20,7 +20,7 @@ router.get('/', Authenticate, function(req, res) {
 });
 
 //create account
-router.post('/', function(req, res) {
+router.post('/', async function(req, res) {
   
   const errorMessages = ValidateAll(req.body, Validations);
   
@@ -33,7 +33,7 @@ router.post('/', function(req, res) {
   const email = req.body.email;
   const password = req.body.password;
   
-  CreateAccount(email, password)
+  await CreateAccount(email, password)
     .then((newAccount)=> {
       res.send(newAccount);
     })
@@ -44,11 +44,11 @@ router.post('/', function(req, res) {
 });
 
 //authenticate
-router.post('/Token', function(req, res) {
+router.post('/Token', async function(req, res) {
   
   const email = req.body.email;
   const password = req.body.password;
-  LogIn(email, password)
+  await LogIn(email, password)
     .then(account => CreateToken(account.id))
     .then(token=> {
         res.cookie('auth', token, { maxAge: 10 * 60 * 1000, httpOnly: true });
@@ -56,7 +56,6 @@ router.post('/Token', function(req, res) {
         res.send({});
       })
     .catch(errorMessage=> {
-      console.log(errorMessage);
       res.status(403);
       res.send(errorMessage);  
     });

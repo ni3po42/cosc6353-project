@@ -17,7 +17,7 @@ function GetAccount(accountId){
     return FindOne({_id:accountId})
         .then(account=>{
             if (!account){
-                throw "Username/password not found.";
+                throw "Account not found.";
             }
             return {id : account._id, userName : account.userName};
         });

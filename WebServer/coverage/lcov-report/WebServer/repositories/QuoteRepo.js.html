@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for WebServer/repositories/AccountRepo.js</title>
+    <title>Code coverage report for WebServer/repositories/QuoteRepo.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -16,18 +16,18 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="../../index.html">All files</a> / <a href="index.html">WebServer/repositories</a> AccountRepo.js
+      <a href="../../index.html">All files</a> / <a href="index.html">WebServer/repositories</a> QuoteRepo.js
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>16/16</span>
+        <span class='fraction'>23/23</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>6/6</span>
+        <span class='fraction'>8/8</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>16/16</span>
+        <span class='fraction'>22/22</span>
       </div>
     </div>
     <p class="quiet">
@@ -91,9 +91,13 @@
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
+<a name='L46'></a><a href='#L46'>46</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -108,31 +112,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -140,54 +135,53 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span></td><td class="text"><pre class="prettyprint lang-js">const { FindOne, Insert } = require("./dbHelper.js");
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">const {Update, FindOne, ObjectID} = require("./dbHelper.js");
 &nbsp;
-function Authenticate(hash){
-    
-    return FindOne({hash:hash})
-        .then(account=&gt;{
-            if (!account){
-                throw "Username/password not found.";
-            }
-            return {id : account._id, userName : account.userName};
-        });
+function InsertQuote(accountId, quoteRequest){
+    quoteRequest.created = new Date();
+    return Update({_id: ObjectID(accountId)},{$push:{quotes : quoteRequest}, $inc:{quoteCount : 1}})
+            .then(()=&gt; quoteRequest);
 }
 &nbsp;
-&nbsp;
-function GetAccount(accountId){
+function GetQuoteCount(accountId){
     
-    return FindOne({_id:accountId})
-        .then(account=&gt;{
-            if (!account){
-                throw "Account not found.";
-            }
-            return {id : account._id, userName : account.userName};
-        });
+    return FindOne({_id:ObjectID(accountId)})
+            .then(account=&gt;{
+                if (!account){
+                    throw "Account not found.";
+                }
+                return account.quoteCount;
+            });
 }
 &nbsp;
-function CreateNewAccount(email, hash){
+function GetQuotes(currentAccountId, query){
     
-    const newAccount = {
-                userName : email.toLowerCase(),
-                hash : hash,
-                profile : null,
-                quotes : [],
-                quoteCount : 0
-            };
+    const {page, ...origResp} = query;
+    const response = {...origResp};
+    const startIndex = (query.currentPage - 1) * query.pageSize;
+    const n = query.pageSize;
     
-    return FindOne({email:email.toLowerCase()})
-        .then(account=&gt;{
-            if (account){
-                throw "Account with that email was already registered.";
-            }
-            return newAccount;
-        })
-        .then(Insert)
-        .then(account=&gt;({id : account._id, userName : account.userName}));
+    return FindOne({_id:ObjectID(currentAccountId)}, {projection : { quotes : { $slice : [ startIndex, n ] }, quoteCount : 1, profile : 1  }})
+            .then(account=&gt;{
+                if (!account){
+                    throw "Account not found.";
+                }
+                
+                if (account.quotes &amp;&amp; account.quotes.length){
+                    const page = account.quotes.map(q =&gt; ({ ...q, totalAmount : q.suggestedPrice * q.gallonsRequested, deliveryAddress: q.deliveryAddress }));
+                   
+                   response.pageCount = Math.ceil(account.quoteCount / query.pageSize);
+                   response.page = page;
+                   return response;
+                    
+                }else{
+                    throw "No quotes for account found.";
+                }
+            });
 }
 &nbsp;
-&nbsp;
-module.exports = { Authenticate, GetAccount, CreateNewAccount };</pre></td></tr>
+module.exports = {InsertQuote, GetQuotes, GetQuoteCount};</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->

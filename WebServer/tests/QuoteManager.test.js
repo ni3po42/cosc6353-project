@@ -1,6 +1,7 @@
 import {InsertQuote, GetQuotes} from "../repositories/QuoteRepo";
 import {GetQuoteHistory, CreateQuote} from "../managers/QuoteManager";
 const { PredictPrice } = require("../managers/PricingModule");
+const {GetProfile} = require("../repositories/ProfileRepo");
 
 jest.mock("../repositories/QuoteRepo" , ()=>({
     InsertQuote : jest.fn(),
@@ -11,6 +12,10 @@ jest.mock("../managers/PricingModule" , ()=>({
     PredictPrice : jest.fn()
 }));
 
+jest.mock("../repositories/ProfileRepo" , ()=>({
+    GetProfile : jest.fn()
+}));
+
 describe("Quote manager tests", ()=>{
     
     beforeEach(() => {
@@ -18,6 +23,7 @@ describe("Quote manager tests", ()=>{
       InsertQuote.mockClear();
       GetQuotes.mockClear();
       PredictPrice.mockClear();
+      GetProfile.mockClear();
     });
     
     it('can create quote', async ()=>{
@@ -26,6 +32,17 @@ describe("Quote manager tests", ()=>{
        const request = {
            data : "data"
        };
+       
+       const  profile = {
+           fullName : "myname",
+           address1 : "1234",
+           address2 : "4321", 
+           city : "houston",
+           state : "TX",
+           zip : "77001"
+       };
+       
+       GetProfile.mockResolvedValue(profile);
        
        const expectedResult = {...request, suggestedPrice : 1000};
        PredictPrice.mockResolvedValue(1000);
@@ -60,7 +77,18 @@ describe("Quote manager tests", ()=>{
             pageCount : 200
         };
        
-       GetQuotes.mockResolvedValue({page : response.page, count : response.pageCount});
+       const  profile = {
+           fullName : "myname",
+           address1 : "1234",
+           address2 : "4321", 
+           city : "houston",
+           state : "TX",
+           zip : "77001"
+       };
+       
+       GetProfile.mockResolvedValue(profile);
+       
+       GetQuotes.mockResolvedValue({...query, page : response.page, pageCount : response.pageCount});
        
        //act
        const result = await GetQuoteHistory(accountId, query);
@@ -88,7 +116,7 @@ describe("Quote manager tests", ()=>{
             pageCount : 200
         };
        
-       GetQuotes.mockResolvedValue({page : response.page, count : response.pageCount});
+       GetQuotes.mockResolvedValue({...exptectedQuery, page : response.page, pageCount : response.pageCount});
        
        //act
        const result = await GetQuoteHistory(accountId, {});

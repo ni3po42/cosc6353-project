@@ -27,8 +27,6 @@ async function CreateQuote(accountId, quoteRequest){
     updatedRequest.suggestedPrice = price;
     updatedRequest.deliveryAddress = profile;
     
-    console.log(updatedRequest);
-    
     return await InsertQuote(accountId, updatedRequest);
 }
 

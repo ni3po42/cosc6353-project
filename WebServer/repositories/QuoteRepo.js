@@ -13,19 +13,16 @@ function GetQuoteCount(accountId){
                 if (!account){
                     throw "Account not found.";
                 }
-                return (account.quotes || []).length;
+                return account.quoteCount;
             });
 }
 
 function GetQuotes(currentAccountId, query){
     
-    const {page, ...response} = query;
-    
+    const {page, ...origResp} = query;
+    const response = {...origResp};
     const startIndex = (query.currentPage - 1) * query.pageSize;
     const n = query.pageSize;
-    
-    console.log(startIndex);
-    console.log(n);
     
     return FindOne({_id:ObjectID(currentAccountId)}, {projection : { quotes : { $slice : [ startIndex, n ] }, quoteCount : 1, profile : 1  }})
             .then(account=>{
