@@ -28,7 +28,7 @@ describe("QuoteHistory Component tests", ()=>{
         const div = document.createElement('div');
         
         const getquoteAwait = GetQuotes.mockResolvedValue({ 
-            page : [{id: "1"}],
+            page : [{created : "2019-2-2"}],
             pageSize :  1,
             pageCount : 1,
             currentPage : 1
@@ -45,7 +45,7 @@ describe("QuoteHistory Component tests", ()=>{
      it('updates state on mount', async () => {
        //arrange
        const response = { 
-            page : [{id: "2"}],
+            page : [{created : "2019-2-2"}],
             pageSize :  1,
             pageCount : 3,
             currentPage : 2
@@ -66,7 +66,7 @@ describe("QuoteHistory Component tests", ()=>{
     it('can go to the first page', async ()=>{
         //arrange
        const response = { 
-            page : [{id: "2"}],
+            page : [{created : "2019-2-2"}],
             pageSize :  1,
             pageCount : 3,
             currentPage : 2
@@ -87,7 +87,7 @@ describe("QuoteHistory Component tests", ()=>{
     it('can go to the prev page', async ()=>{
          //arrange
        const response = { 
-            page : [{id: "2"}],
+            page : [{created : "2019-2-2"}],
             pageSize :  1,
             pageCount : 3,
             currentPage : 2
@@ -108,7 +108,7 @@ describe("QuoteHistory Component tests", ()=>{
     it('can go to the next page', async ()=>{
           //arrange
        const response = { 
-            page : [{id: "2"}],
+            page : [{created : "2019-2-2"}],
             pageSize :  1,
             pageCount : 3,
             currentPage : 2
@@ -129,7 +129,7 @@ describe("QuoteHistory Component tests", ()=>{
     it('can go to the last page', async ()=>{
          //arrange
        const response = { 
-            page : [{id: "2"}],
+            page : [{created : "2019-2-2"}],
             pageSize :  1,
             pageCount : 3,
             currentPage : 2
@@ -150,7 +150,7 @@ describe("QuoteHistory Component tests", ()=>{
     it('can alter page state when clicking', async ()=> {
         //arrange
        const response = { 
-            page : [{id: "2"}],
+            page : [{created : "2019-2-2"}],
             pageSize :  1,
             pageCount : 3
           };
@@ -168,25 +168,25 @@ describe("QuoteHistory Component tests", ()=>{
        await GetQuotes.mockResolvedValue({...response, currentPage : 1});
        let s = await instance.handleClick(0,1);
        expect(s.currentPage).toBe(1);
-       expect(GetQuotes.mock.calls[0][0]).toMatchObject({...response, currentPage : 1})
+       expect(GetQuotes.mock.calls[0][0]).toMatchObject({pageSize : response.pageSize, currentPage : 1})
         
         GetQuotes.mockClear();
-       await GetQuotes.mockResolvedValue({...response, currentPage : 2});
+       await GetQuotes.mockResolvedValue({page : response.page, pageSize : response.pageSize,  currentPage : 2});
         s = await instance.handleClick(1);
         expect(s.currentPage).toBe(2);
-        expect(GetQuotes.mock.calls[0][0]).toMatchObject({...response, currentPage : 2})
+        expect(GetQuotes.mock.calls[0][0]).toMatchObject({pageSize : response.pageSize,  currentPage : 2})
         
         GetQuotes.mockClear();
        await GetQuotes.mockResolvedValue({...response, currentPage : 3});
         s = await instance.handleClick(0,3);
         expect(s.currentPage).toBe(3);
-        expect(GetQuotes.mock.calls[0][0]).toMatchObject({...response, currentPage : 3})
+        expect(GetQuotes.mock.calls[0][0]).toMatchObject({pageSize : response.pageSize,  currentPage : 3})
         
         GetQuotes.mockClear();
-       await GetQuotes.mockResolvedValue({...response, currentPage : 2});
+       await GetQuotes.mockResolvedValue({page : response.page, pageSize : response.pageSize,  currentPage : 2});
         s = await instance.handleClick(-1);
         expect(s.currentPage).toBe(2);
-        expect(GetQuotes.mock.calls[0][0]).toMatchObject({...response, currentPage : 2})
+        expect(GetQuotes.mock.calls[0][0]).toMatchObject({pageSize : response.pageSize,  currentPage : 2})
         
     });
     
@@ -194,7 +194,7 @@ describe("QuoteHistory Component tests", ()=>{
     it('cant move beyond page boundaries', async ()=> {
         //arrange
        const response = { 
-            page : [{id: "2"}],
+            page : [{created : "2019-2-2"}],
             pageSize :  1,
             pageCount : 1
           };

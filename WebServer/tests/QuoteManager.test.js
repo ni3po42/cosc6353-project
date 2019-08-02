@@ -29,7 +29,7 @@ describe("Quote manager tests", ()=>{
        
        const expectedResult = {...request, suggestedPrice : 1000};
        PredictPrice.mockResolvedValue(1000);
-       const insertedQuote = {...expectedResult, id : "1234" };
+       const insertedQuote = {...expectedResult };
        InsertQuote.mockResolvedValue(insertedQuote);
        
        //act

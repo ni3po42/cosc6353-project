@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">56.25% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>12/12</span>
+        <span class='fraction'>9/16</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -35,16 +35,16 @@
         <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">56.25% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>12/12</span>
+        <span class='fraction'>9/16</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line high'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -74,8 +74,16 @@
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -89,22 +97,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">//Quote Module
 const { GetQuotes, InsertQuote } = require("../repositories/QuoteRepo");
 const { PredictPrice } = require("./PricingModule");
+&nbsp;
+const {GetProfile} = require("../repositories/ProfileRepo");
 &nbsp;
 async function GetQuoteHistory(accountId, query){
     //do additional work. For this example, just pass to the repo
@@ -115,19 +129,23 @@ async function GetQuoteHistory(accountId, query){
     updatedQuery.currentPage = updatedQuery.currentPage || 1;
     updatedQuery.pageSize = updatedQuery.pageSize || 20;
     
-    const {page, count} = await GetQuotes(accountId, updatedQuery);
-    
-    return {...updatedQuery, page : page, pageCount: count};
+    return await GetQuotes(accountId, updatedQuery);
 }
 &nbsp;
 async function CreateQuote(accountId, quoteRequest){
     
-    const price = await PredictPrice(accountId, quoteRequest);
+    const profile = await GetProfile(accountId);
+    const price = <span class="cstat-no" title="statement not covered" >await PredictPrice(accountId, quoteRequest);</span>
     
-    const updatedRequest = {...quoteRequest};
-    updatedRequest.suggestedPrice = price;
+    const updatedRequest = <span class="cstat-no" title="statement not covered" >{...quoteRequest};</span>
+<span class="cstat-no" title="statement not covered" >    delete profile.fullName;</span>
     
-    return await InsertQuote(accountId, updatedRequest);
+<span class="cstat-no" title="statement not covered" >    updatedRequest.suggestedPrice = price;</span>
+<span class="cstat-no" title="statement not covered" >    updatedRequest.deliveryAddress = profile;</span>
+    
+<span class="cstat-no" title="statement not covered" >    console.log(updatedRequest);</span>
+    
+<span class="cstat-no" title="statement not covered" >    return await InsertQuote(accountId, updatedRequest);</span>
 }
 &nbsp;
 module.exports = { GetQuoteHistory, CreateQuote };</pre></td></tr>
@@ -136,7 +154,7 @@ module.exports = { GetQuoteHistory, CreateQuote };</pre></td></tr>
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Jul 28 2019 22:27:54 GMT+0000 (Coordinated Universal Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Aug 02 2019 02:45:50 GMT+0000 (Coordinated Universal Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

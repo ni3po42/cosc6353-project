@@ -1,4 +1,4 @@
-import { CreateQuote, GetQuotes } from '../services/QuoteService';
+import { CreateQuote, GetQuotes, GetPrice } from '../services/QuoteService';
 
 import axios from 'axios';
 
@@ -66,7 +66,7 @@ describe("Quote service tests", ()=>{
        expect(axios.mock.calls[0][0]).toMatchObject({
            method : "GET",
            url : "/api/Quote",
-           data : query
+           params : query
        });
     });
     
@@ -88,4 +88,45 @@ describe("Quote service tests", ()=>{
        //assert
        expect(result).toBe("some error");
     });
+    
+    
+     it('can get price prediction', async ()=>{
+       //arrange
+       const data = {
+           data : "filter"
+       };
+       axios.mockResolvedValue({
+           data : "data"
+       });
+       
+       //act
+       const result = await GetPrice(data).catch(r=>r);
+       
+       //assert
+       expect(axios).toHaveBeenCalled();
+       expect(axios.mock.calls[0][0]).toMatchObject({
+           method : "POST",
+           url : "/api/Quote/NewPrice",
+           data : data
+       });
+    });
+    
+     it('can handle price error', async ()=>{
+       //arrange
+       const data = {
+           data : "data"
+       };
+       axios.mockRejectedValue({
+           response : {
+               data : "some error"
+           }
+       });
+       
+       //act
+       const result = await GetPrice(data).catch(r=>r);
+       
+       //assert
+       expect(result).toBe("some error");
+    });
+    
 });
