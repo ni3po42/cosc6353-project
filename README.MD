@@ -1,4 +1,9 @@
-This project is split into three applications:
+Timothy Stratton
+Jairo Quintanilla
+COSC 6353
+8/2/2019
+
+This project is split into 4 folders/projects:
 
 ### `UI`
 
@@ -20,10 +25,13 @@ All packages are maintained via npm.
 
 ### `DB`
 
-This is the database application. It will define the schemas and run on it's own process and port.
-it will likely run a NoSql DB due to the simplicity of the application requirements, (MongoDB is installed here already);
+This folder contains files and scripts for setting up configration for MongoDB
 
-Notable folders:
+### `Common`
+This folder contains common scripts used across the application
+
+
+### `Notable folders`
 
 public - this is the 'static' content to be hosted. This is populated from the
 UI application's build script. This folder will usually only contain dev or prod
