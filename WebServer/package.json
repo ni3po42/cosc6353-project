@@ -12,7 +12,7 @@
     "@babel/core": "^7.5.0",
     "@babel/preset-env": "^7.5.2",
     "babel-jest": "^24.8.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "common": "file:../Common",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
